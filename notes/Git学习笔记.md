@@ -122,7 +122,7 @@ $ ssh-keygen -t rsa -C "youremail@example.com"
 
 #### Step2
 
-目前，在GitHub上的这个`learngit`仓库还是空的，GitHub告诉我们，可以从这个仓库克隆出新的仓库，也可以把一个已有的本地仓库与之关联，然后，把本地仓库的内容推送到GitHub仓库。我们选用的是SSH。
+目前，在GitHub上的这个`learngit`仓库还是空的，GitHub告诉我们，可以从这个仓库克隆出新的仓库，也可以把一个已有的本地仓库与之**关联**，然后，把本地仓库的内容推送到GitHub仓库。我们选用的是SSH。
 
 现在，我们根据GitHub的提示，在本地的`learngit`仓库下运行命令：
 
@@ -132,24 +132,11 @@ git remote add origin git@github.com:yourname/yourreponame.git
 
 添加后，远程库的名字就是`origin`，这是Git默认的叫法，也可以改成别的，但是`origin`这个名字一看就知道是远程库。
 
-#### Step3
-
-现在我们就把本地库的所有内容推送到远程库上：
+如果出现
 
 ```bash
-$ git push -u origin master
-Counting objects: 20, done.
-Delta compression using up to 4 threads.
-Compressing objects: 100% (15/15), done.
-Writing objects: 100% (20/20), 1.64 KiB | 560.00 KiB/s, done.
-Total 20 (delta 5), reused 0 (delta 0)
-remote: Resolving deltas: 100% (5/5), done.
-To github.com:michaelliao/learngit.git
- * [new branch]      master -> master
-Branch 'master' set up to track remote branch 'master' from 'origin'
+fatal: remote origin already exists. 
 ```
-
-**BUG：**fatal: remote origin already exists. 
 
 解决方法：这时因为已经有名叫origin的远程库存在了，所以应该有三种方法：
 
@@ -175,3 +162,94 @@ $ vi .git/config
 
 把 [remote “origin”] 那一行删掉就好了
 
+#### Step3
+
+如果你之前没有提交过文件,而你在git push的时候出现：
+
+```
+error: src refspec master does not match any.
+error: failed to push some refs to 'git@github.com:hahaha/ftpmanage.git'
+```
+
+或者
+
+```bash
+Everything up-to-date
+```
+
+
+
+并且文件也没有提交上去.可能是因为你没有git add 和 git commit。
+
+需要重新执行：
+
+```bash
+git add .
+git commit -m "message"
+git push origin master
+```
+
+
+
+然后再执行
+
+```bash
+$ git push -u origin master
+Counting objects: 20, done.
+Delta compression using up to 4 threads.
+Compressing objects: 100% (15/15), done.
+Writing objects: 100% (20/20), 1.64 KiB | 560.00 KiB/s, done.
+Total 20 (delta 5), reused 0 (delta 0)
+remote: Resolving deltas: 100% (5/5), done.
+To github.com:michaelliao/learngit.git
+ * [new branch]      master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'
+```
+
+如果出现
+
+```bash
+$ git push -u origin master
+Warning: Permanently added the RSA host key for IP address 'xx.xx.xxx.xxx' to the list of known hosts.
+To git@github.com:hahaha/ftpmanage.git
+ ! [rejected]        master -> master (fetch first)
+error: failed to push some refs to 'git@github.com:hahahah/ftpmanage.git'
+hint: Updates were rejected because the remote contains work that you do
+hint: not have locally. This is usually caused by another repository pushing
+hint: to the same ref. You may want to first integrate the remote changes
+hint: (e.g., 'git pull ...') before pushing again.
+hint: See the 'Note about fast-forwards' in 'git push --help' for details.
+```
+
+hint提示我们integrate the remote changes (e.g., 'git pull ...') before pushing again.
+
+所以我们执行
+
+```bash
+$ git pull --rebase origin master
+warning: no common commits
+remote: Counting objects: 3, done.
+remote: Total 3 (delta 0), reused 0 (delta 0), pack-reused 0
+Unpacking objects: 100% (3/3), done.
+From github.com:hahah/ftpmanage
+ * branch            master     -> FETCH_HEAD
+ * [new branch]      master     -> origin/master
+First, rewinding head to replay your work on top of it...
+Applying: init files
+```
+
+再push
+
+```bash
+$ git push -u origin master
+Counting objects: 10, done.
+Delta compression using up to 2 threads.
+Compressing objects: 100% (10/10), done.
+Writing objects: 100% (10/10), 5.15 KiB | 0 bytes/s, done.
+Total 10 (delta 3), reused 0 (delta 0)
+To git@github.com:hahaha/ftpmanage.git
+   a2b5c30..1044f15  master -> master
+Branch master set up to track remote branch master from origin.
+```
+
+**成功！**
