@@ -530,8 +530,6 @@ class VarDemo
 
 知道了符号位，我们再做二进制右移运算时，空出的多余高位，全部用符号位补齐即可。
 
-
-
 **Java中所有基本数据类型均使用该数字的补码进行表示**，所以再运算结束后，会将补码转换为原码再转换为我们声明的十进制数据类型，所以在Java中测试5与-5的输出我们能看到这样的结果：
 
 ```java
@@ -758,10 +756,6 @@ System.out.println("i=" + i); // 输出 i=0
 
 编译后的核心代码如下：
 
-
-
-
-
 ```java
 0: iconst_0                          // 生成整数0
 1: istore_1                          // 将整数0赋值给1号存储单元（即变量i，i=0）
@@ -793,7 +787,72 @@ i = ++i; // IDE抛出【The assignment to variable i has no effect】警告
 System.out.println("i=" + i); // 输出i=1
 ```
 
- 可以看到，使用`++i`时出现了“正确”的结果，同时Eclipse IDE中抛出【The assignment to variable i has no effect】警告，警告的意思是将值赋给变量i毫无作用，并不会改变i的值。也就是说：`i = ++i`等价于`++i`。 
+ 可以看到，使用`++i`时出现了“正确”的结果，同时Eclipse IDE中抛出【The assignment to variable i has no effect】警告，警告的意思是将值赋给变量i毫无作用，并不会改变i的值。也就是说：`i = ++i`等价于`++i`。
+
+#### i++和++i的异同
+
+```java
+class Test_3{
+	public static void main(String[] args){
+		//verse1
+		int i=0;
+		i++;
+		System.out.println(i);//1
+		//verse2
+		int k=0;
+		k=k++;
+		System.out.println(k);//0
+		//verse3
+		int j=0;
+		++j;
+		System.out.println(j);//1
+		//verse4
+		int l=0;
+		l=++l;
+		System.out.println(l);//1
+		
+		System.out.println("------------------------------");
+		
+		test();
+		
+	}
+	
+	/* 
+		根据输出结果我们可以看出，i++不参与赋值运算的时候与参与的时候输出的结果分别为1,0,是不一样的。
+		而++j的两次输出则都是1。
+		结合之前所学进行分析可知上述程序的运行过程如下：
+		
+		verse1:
+		计算机在内存中开辟1号存储单元用来存储变量i，生成整数0，赋值给1号存储单元（此时i=0），1号存储单元的值+1（此时i=1），打印i的值为1。
+		verse2:
+		计算机在内存中开辟1号存储单元用来存储变量k，生成整数0，赋值给1号存储单元（此时k=0），将1号存储单元的值（0）加载到数据栈，
+		1号存储单元的值+1（此时k=1），将数据栈栈顶的值（0）取出来赋值给1号存储单元（此时k=0），打印k的值为0。
+		
+		verse3:
+		计算机在内存中开辟1号存储单元用来存储变量l，生成整数0，赋值给2号存储单元（此时l=0），2号存储单元的值+1（此时l=1），打印l的值为1。
+		verse4:
+		计算机在内存中开辟2号存储单元用来存储变量j，生成整数0，赋值给2号存储单元（此时j=0），2号存储单元的值+1（此时j=1），
+		将2号存储单元的值（1）加载到数据栈，将数据栈栈顶的值（1）取出来赋值给2号存储单元（此时j=1）,打印j的值为1。
+		
+		结论：综上我们可以看出，i++和++i都是自增1，单独执行时没有区别，但涉及到赋值运算时，i++是先将变量i的值加载到数据栈再自增，
+		++i是先自增再把已经变化了的i的值加载到数据栈，所以赋值运算后，等号左边的变量的值不同。因此，当涉及赋值运算时，我们应当
+		注意区分i++和++i，然而独立执行而不涉及赋值时，两者并无明显区别。这一点我们可以从下方的代码运行结果完全一样得知。
+		
+	*/
+	
+	public static void test(){
+		for(int i=0;i<3;i++){
+			System.out.println(i);
+		}
+		
+		for(int j=0;j<3;++j){
+			System.out.println(j);
+		}
+	}
+}//打印出的i和j的值完全一样
+```
+
+
 
 
 
@@ -929,7 +988,7 @@ class OperateDemo5{
 }
 ```
 
-![image-20191031150052506](F:\Java\notes\image-20191031150052506.png)
+![image](Java学习笔记.assets\image-20191031150052506.png)
 
 所以可以用1来与目标二进制数据进行与运算，从而取出特定的几个二进制位上的数据。
 
@@ -937,7 +996,7 @@ class OperateDemo5{
 
 **异或**
 
-![image-20191031151436197](F:\Java\notes\image-20191031151436197.png)
+![image](Java学习笔记.assets\image-20191031151436197.png)
 
 
 
@@ -1984,6 +2043,51 @@ class FunctionTest5{
 
 变量只能装载一个数据，数组则可以装载一组同类型数据。
 
+#### 声明与创建数组
+
+```java
+/* 
+	要创造一个数组，我们要先声明，再创建。
+ */
+
+class ArrayDemo1{
+	public static void main(String[] args){
+		//第一步，声明一个数组有两种方式
+		int[] arr;//首选方法。
+		int arr1[];//作用相同，但阅读性不强，容易使人混淆，不推荐。
+		
+		//第二步，创建数组,对数组进行初始化。
+		arr=new int[3];//动态初始化，因为数组中的元素只是被赋予了默认值，还会动态变化。
+		arr1=new int[]{11,22,33};//静态初始化，因为数组中的元素已经确定。
+		/* 上述语句中，我们做了两件事：
+			1.用new语句创建了一个数组；
+			2.将创建的数组的引用赋值给了arr和arr1.
+		*/
+		
+		//数组的声明和创建可以合并成一条语句
+		
+		//需要一个容器，但不清楚要存储的具体内容。
+		//元素类型[] 数组名=new 元素类型[元素个数或数组长度]
+		int[] arr2=new int[3];//动态初始化
+		
+		//需要一个容器，存储已知的具体内容
+		//第二种定义方式：元素类型[] 数组名=new 元素类型[不要写长度]{元素，元素，元素……}
+		int[] arr3=new int[]{111,222,333};//静态初始化，可以简写为：int[] arr3={111,222,333};
+		
+		/* 
+		数据多的时候，首先想到用容器把它们存起来，处理一个个单独的数据比处理一组数据要麻烦。
+		像数组这样的容器是计算机编程语言中的重点内容。
+		*/
+		
+		
+	}
+}
+```
+
+
+
+
+
 #### 数组的优点
 
 可以自动给数组中的元素从0开始编号，方便操作这些元素。
@@ -2035,33 +2139,7 @@ class ArrayDemo{
 
 4.多个引用类型变量可以指向同一个实体，但其中一个实体被赋值为null后，仅仅是去掉了该变量对堆内存中的实体的指向关系，而其他也指向这个实体的引用类型变量仍在指向这个实体，所以这个实体并不会被当做垃圾。
 
-![image-20191227183910167](F:\Java\notes\image-20191227183910167.png)
-
-```java
-class ArrayDemo{
-	public static void main(String[] args){
-		//第一种定义方式：元素类型[] 数组名=new 元素类型[元素个数或数组长度]
-		//需要一个容器，但不清楚具体内容。
-		int[] arr=new int[3];
-		//在未赋值的情况下，数组中各元素的默认值为0。
-		arr[0]=89;
-		//上述代码为给arr[]数组中的第0个元素赋值为89。
-		//中括号中的数字俗称脚标，学名索引。
-		
-		//第二种定义方式：元素类型[] 数组名=new 元素类型[不要写长度]{元素，元素，元素……}
-		//需要一个容器，存储已知的具体内容。
-		int[] arr2=new int[]{1,2,3,4}
-		
-		//第三种定义方式（静态初始化方式）
-		int[] arr3={1,2,3,4}
-		/* 
-		二三两种方式在许多情况下通用。
-		数据多的时候，首先想到用容器把它们存起来，处理一个个单独的数据比处理一组数据要麻烦。
-		像数组这样的容器是计算机编程语言中的重点内容。
-		*/
-	}
-}
-```
+![image-20191231172353855](Java学习笔记.assets\image-20191227183910167.png)
 
 ```java
 class ArrayDemo2{
@@ -2091,6 +2169,20 @@ class ArrayDemo2{
 ```
 
 #### 数组的常用操作
+
+##### 数组反转
+
+```java
+public static int[] reserve( int[] arr ){
+    int[] arr1 = new int[arr.length];
+    for( int x=0;x<arr.length;x++ ){
+        arr1[x] = arr[arr.length-x-1];
+    }
+    return arr1 ;
+}
+```
+
+
 
 ##### 遍历
 
@@ -2485,6 +2577,287 @@ class ArrayDemo7{
 	}
 	
 	
+}
+```
+
+##### 查表法
+
+Q：如何将十进制转换为十六进制？
+
+![image-20200108162137473](Java学习笔记.assets/image-20200108162137473.png)
+
+###### 思路：
+
+1.计算机中存储的都是二进制数据，所以我们把十进制数转换成二进制来分析这个问题。
+
+2.根据之前所学，我们知道十六进制数其实就是用二进制的四位来表示十六进制的一位。
+
+3.所以我们只要把这个十进制数转化为二进制，并且以每四个二进制位为一组，把它取出来，并存储在容器中，最后输出。
+
+4.因为在计算机中所有数据都以二进制表示，所以我们省却了十进制转化为二进制的步骤，直接思考怎么分别取出来并存储的问题。
+
+5.关于如何取出来，我们想到之前学过的位运算中的与运算，二进制数按位和1进行与运算，可以将有效位保留下来，通过用1去跟我们想要保留下来的二进制位去进行与运算，用0去跟我们不想要的二进制位进行与运算，就可以实现只保留我们想要的二进制位。
+
+6.于是如上图所示，我们用1111去和我们想要转换的数据进行与运算，先保留前四位，然后把该数字右移四位，重复之前的与运算，就可以取出后面四位所表示的数字。
+
+###### 代码实现：
+
+```java
+/* 
+	Q：如何将一个十进制数字转化为十六进制数字？ 
+	A：查表法。
+	
+	遗留问题：
+	怎么能让分割线上的编号自己按规律变化？
+*/
+class ArrayTest2{
+	public static void main(String[] args){
+		int x=0;
+		
+		toHex(60);
+		toHex_1(60);
+		toHex_2(60);
+		toHex_3(60);
+		toHex_4(60);
+		toHex_5(60);
+		toHex_6(60);
+		trans(60);
+	}
+	
+	public static void toHex(int num){
+		int x=num&15;
+		num=num>>>4;
+		int y=num&15;
+		System.out.println(x+"\n"+y);
+		System.out.println("--------------------------------0");
+	}
+	/* 
+		输出为12,3，正确，但这是在我们已知要转换的数据转换为十六进制数之后只有两位的情况下，可以如此实现。
+		那么，如果要转换的数据比较大，且我们不知道需要进行多少次与运算呢？
+		int类型有32个二进制位，即最多有8个十六进制位，所以我们最多需要进行八次与运算，那就要重复写八段代码，比较麻烦，
+		所以我们考虑用循环结构来简化我们的代码。
+	*/
+	
+	public static void toHex_1(int num){
+		for(int i=0;i<8;i++){
+			int temp=num&15;
+			num=num>>>4;
+			System.out.print(temp+",");
+		}
+		System.out.println("\n--------------------------------1");
+	}	
+	/* 
+		输出为12,3,0,0,0,0,0,0,正确，然而我们最终要输出的是十六进制数，12在十六进制中应该表示为C，所以该怎么办呢？如何让12对应C呢？
+		我们把表示十六进制数所需要的所有元素和对应
+		0,1,2,3,4,5,6,7,8,9,A ,B ,C ,D ,E ,F
+		0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+		我们可以发现如果把第二行的数字当成索引的话，这不就是我们刚学过的数组吗？这样一来，数字不就与字母对应起来了吗？
+		所以我们可以得出结论：
+		Q：什么时候使用数组？
+		A:如果两组数据出现了对应关系，而且其中一组数据是有序的整数，并可以作为角标使用，这时就可以考虑使用数组，将这些数据存储到数组中。
+		
+		所以我们这里就可以将与运算的结果作为索引，去数组中查找对应的元素，从而起到将数字与字母对应起来的效果。
+		我们将这种方法称为查表法，如下。
+		
+	*/
+	public static void toHex_2(int num){
+		//我们创建了一个数组作为对应关系表
+		char[] chs=new char[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+		for(int i=0;i<8;i++){
+			int temp=num&15;
+			num=num>>>4;
+			System.out.print(chs[temp]);
+		}
+		System.out.println("\n--------------------------------2");
+		
+	}
+	/* 
+		输出结果为C3000000，正确，但是我们想要的输出结果是3C，所以我们需要先打印3，后打印C，并且把000000去掉。
+		考虑到我们如果要转换的数字比较大，用查表法会得出的数据比较多，所以我们可以将这些数据存储起来，再进行操作。
+		所以我们创建一个数组作为临时容器来存储查表法查出的数据。
+	*/
+	public static void toHex_3(int num){
+		// 还是先创建一个关系表
+		char[] chs=new char[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+		// 再创建一个数组用来做容器
+		char[] arr=new char[8];//因为最多只能查出八个数据，所以将数组长度设定为8。
+		//因为我们需要将查出的数据按顺序存储到上面的arr中，所以我们需要一个能够规律变化的变量来控制arr的索引。
+		int index=0;
+		//为了把000000去掉，我们需要控制当想要转换的数据的有效位已经都取到时就不再进行位运算了。即num!=0时，停止运算。
+		while(num!=0){
+			int temp=num&15;
+			arr[index++]=chs[temp];
+			/* 这里可以把arr[index++]=chs[temp];看做：
+				int j=index++;
+				arr[j]=chs[temp];
+				结合循环来看，用j=index++时，j是从0开始增大，
+				用j=++index时，j就是从1开始增大。
+				因为我们要从索引0的位置开始存储元素，所以采用index++。
+			*/
+			num=num>>>4;
+		}
+		//然后我们遍历数组arr
+		for(int i=0;i<arr.length;i++){
+			System.out.print(arr[i]+",");
+		}
+		System.out.println("\n--------------------------------3");
+	}
+	/* 
+		结果为C,3, , , , , , ,我们发现还是没有得到3C，且000000虽然没了，但仍然有空位存在。
+		所以我们考虑将查表得到的结果按顺序从容器数组arr的尾部，即索引最大的位置开始反向存储，然后正向输出。
+		这样就能打印出3C，但仍有空位存在。所以我们用index来控制遍历循环的次数。
+		
+	*/
+	public static void toHex_4(int num){
+		char[] chs=new char[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+		char[] arr=new char[8];
+		int index=arr.length;
+		while(num!=0){
+			int temp=num&15;
+			arr[--index]=chs[temp];
+			num=num>>>4;
+		}
+		for(int i=index;i<arr.length;i++){
+			System.out.print(arr[i]);
+		}
+		System.out.println("\n--------------------------------4");
+	}
+	
+	/* 
+		或者仍然从索引0开始顺序存储，但从index反向遍历。
+	*/
+	public static void toHex_5(int num){
+		char[] chs=new char[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+		char[] arr=new char[8];
+		int index=0;
+		while(num!=0){
+			int temp=num&15;
+			arr[index++]=chs[temp];
+			num=num>>>4;
+		}
+		for(int i=index-1;i>=0;i--){
+			System.out.print(arr[i]);
+		}
+		System.out.println("\n--------------------------------5");
+	}
+	/* 
+		如果num为0，程序没有结果，所以我们加上
+	*/
+	public static void toHex_6(int num){
+		if(num==0){
+			System.out.print('0');
+			return;//不写return的话，这段代码执行结束后还会执行后续代码。
+		}
+		char[] chs=new char[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+		char[] arr=new char[8];
+		int index=0;
+		while(num!=0){
+			int temp=num&15;
+			arr[index++]=chs[temp];
+			num=num>>>4;
+		}
+		for(int i=index-1;i>=0;i--){
+			System.out.print(arr[i]);
+		}
+		System.out.println("\n--------------------------------6");
+	}
+	/* 
+		在java中提供了现成的进制转换的方法。虽然如此，但我们掌握实现的原理也是有必要的，因为有的编程语言没有这种现成的方法，
+		就需要我们自己造轮子。
+	*/
+	public static void trans(int num){
+		System.out.print(Integer.toHexString(num));
+		/* 相应的转换二进制、八进制的方法也有
+			Integer.toBinaryString(num)
+			Integer.toOctalString(num)
+		*/
+		System.out.println("\n--------------------------------7");
+	}
+	
+}
+```
+
+###### 小案例一：
+
+```java
+/* 
+	现在我们来做一个可以随意选择将数据转换为二、八、十六进制的小程序
+ */
+import java.util.Scanner;
+class TransBase{
+	public static void main(String[] args){
+		Scanner s=new Scanner(System.in);
+		System.out.println("请输入您想要转换的数据");
+		int num=s.nextInt();
+		System.out.println("请输入您想要转换到的进制");
+		int b=s.nextInt();
+		inPut(num,b);
+	}
+	//
+	public static void inPut(int num,int b){
+		if(b==2){
+			toBinary(num);
+		}else if(b==8){
+			toOctal(num);
+		}else if(b==16){
+			toHex(num);
+		}else{
+			System.out.println("您输入的进制不合法");
+		}
+	}
+	//十进制==》二进制
+	public static void toBinary(int num){
+		funcTrans(num,1,1);//你是怎么想的，懵了吧，能写成funcTrans(int num,1,1);看半天还不看不出来。
+	}
+	//十进制==》八进制
+	public static void toOctal(int num){
+		funcTrans(num,7,3);
+	}
+	//十进制==》十六进制
+	public static void toHex(int num){
+		funcTrans(num,15,4);
+	}
+	public static void funcTrans(int num,int base,int offset){
+		if(num==0){
+			System.out.println('0');
+			return;
+		}
+		char[] chs=new char[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+		char[] arr=new char[32];//因为有转换二进制的需要，所以长度8不够用了，增加到32.
+		int index=arr.length-1;
+		while(num!=0){
+			int temp=num&base;
+			arr[index--]=chs[temp];
+			num=num>>>offset;
+		}
+		for(int i=index+1;i<arr.length;i++){
+			System.out.print(arr[i]);
+		}
+	}
+}
+ 
+```
+
+###### 小案例二：
+
+```java
+/* 
+	查表法的应用：
+	根据数字获取对应的星期
+ */
+class ArrayTest3{
+	public static void main(String[] args){
+		System.out.println(getWeek(3));
+	}
+	public static String getWeek(int num){
+		if(num>7||num<1){
+			return "非法数据";
+		}
+		String[] week=new String[]{"","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"};
+		//在索引0的位置上放一个空位是为了让数字和星期几对应起来，毕竟没有星期零。
+		return week[num];
+		//String的首字母S要大写。
+	}
 }
 ```
 
