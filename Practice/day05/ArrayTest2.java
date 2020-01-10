@@ -144,7 +144,7 @@ class ArrayTest2{
 			return;//不写return的话，这段代码执行结束后还会执行后续代码。
 		}
 		char[] chs=new char[]{'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
-		char[] arr=new char[32];//因为有转换二进制的需要，所以长度8不够用了，增加到32.
+		char[] arr=new char[8];
 		int index=0;
 		while(num!=0){
 			int temp=num&15;
