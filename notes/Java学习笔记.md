@@ -2035,7 +2035,7 @@ class FunctionTest5{
 }
 ```
 
-### 数组
+### 一维数组
 
 #### 定义
 
@@ -2861,3 +2861,24 @@ class ArrayTest3{
 }
 ```
 
+
+
+#### 二维数组
+
+```java
+/* 
+	创建二维数组的格式
+ */
+
+class Array2Demo{
+	public static void main(String[] args){
+		int[][] arr=new int[3][2];//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组中含有两个元素。
+		
+		System.out.println(arr);
+		System.out.println(arr[0]);
+		System.out.println(arr[0][1]);
+	}
+}
+```
+
+![image-20200111155840968](Java学习笔记.assets/image-20200111155840968.png)

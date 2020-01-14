@@ -76,11 +76,76 @@ $ git add file2.txt file3.txt
 $ git commit -m "add 3 files."
 ```
 
+## 二、常用指令
+
+### git push
+
+ git push的一般形式为 git push <远程主机名> <本地分支名> : <远程分支名> ，
+
+例如 **git push origin（远程主机名） master（本地分支名）：refs/for/master（远程分支名）** ，
+
+即是将本地的master分支推送到远程主机origin上的对应master分支， origin 是远程主机名，
+
+  第一个master是本地分支名，第二个master是远程分支名。
+
+#####  1.1 git push origin master
+
+​    如果远程分支被省略，如上则表示将本地分支推送到与之存在追踪关系的远程分支（通常两者同名），如果该远程分支不存在，则会被新建。
+
+#####    **1.2** **git push origin ：refs/for/master** 
+
+如果省略本地分支名，则表示删除指定的远程分支，因为这等同于推送一个空的本地分支到远程分支，等同于 git push origin --delete master
+
+#####   **1.3** **git push origin**
+
+如果当前分支与远程分支存在追踪关系，则本地分支和远程分支都可以省略，将当前分支推送到origin主机的对应分支 
+
+##### 　**1.4 git push**
+
+如果当前分支只有一个远程分支，那么主机名都可以省略，形如 git push，可以使用git branch -r ，查看远程的分支名
+
+##### 　**1.5 git push 的其他命令**
+
+这几个常见的用法已足以满足我们日常开发的使用了，还有几个扩展的用法，如下：
+
+（1） git push -u origin master 如果当前分支与多个主机存在追踪关系，则可以使用 -u 参数指定一个默认主机，这样后面就可以不加任何参数使用git push，不带任何参数的git push，默认只推送当前分支，这叫做simple方式，还有一种matching方式，会推送所有有对应的远程分支的本地分支， Git 2.0之前默认使用matching，现在改为simple方式。
+
+如果想更改设置，可以使用git config命令。git config --global push.default matching OR git config --global push.default simple；可以使用git config -l 查看配置
+
+（2） git push --all origin 当遇到这种情况就是不管是否存在对应的远程分支，将本地的所有分支都推送到远程主机，这时需要 -all 选项
+
+服务器上的低，那么一般会提示你git pull更新，如果一定要提交，那么可以使用这个命令。
+
+（4） git push origin --tags //git push 的时候不会推送分支，如果一定要推送标签的话那么可以使用这个命令
+
+##### 　**1.6 关于 refs/for**
+
+　　// refs/for 的意义在于我们提交代码到服务器之后是需要经过code review 之后才能进行merge的，而refs/heads 不需要
+
+### 本地分支与远程分支的追踪关系
+
+```bash
+从当前分支切换到‘dev’分支：
+git checkout dev
+建立并切换新分支：
+git checkout -b 'dev'
+查看当前详细分支信息（可看到当前分支与对应的远程追踪分支）:
+git branch -vv
+查看当前远程仓库信息
+git remote -vv
+```
+
+##### 含义
+
+追踪关系就是说，当前本地分支会对应一个远程分支，你对本地和远程分支的任何操作（eg.push ,pull ,etc），都只会发生在存在追踪关系的两者中间。比如，直接进行git push操作，就是push当前分支到当前分支的追踪关系分支。一般本地master分支，push到的是远程仓库的master分支。
+
+##### 那么我们要如何修改这种追踪关系呢？
 
 
-## 二、时光穿梭
 
-## 三、远程仓库
+## 三、时光穿梭
+
+## 四、远程仓库
 
 实际情况往往是这样，找一台电脑充当服务器的角色，每天24小时开机，其他每个人都从这个“服务器”仓库克隆一份到自己的电脑上，并且各自把各自的提交推送到服务器仓库里，也从服务器仓库中拉取别人的提交。
 
@@ -166,7 +231,7 @@ $ vi .git/config
 
 如果你之前没有提交过文件,而你在git push的时候出现：
 
-```
+```bash
 error: src refspec master does not match any.
 error: failed to push some refs to 'git@github.com:hahaha/ftpmanage.git'
 ```
