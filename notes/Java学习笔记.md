@@ -1774,9 +1774,9 @@ class BreakContinueDemo{
 }
 ```
 
-### 函数
+## 函数
 
-#### 定义
+### 定义
 
 函数就是定义在**类**中的具有**特定功能**的一段**独立小程序**。函数也成为方法。
 
@@ -1893,7 +1893,7 @@ class FunctionDemo3{
 }
 ```
 
-#### 测试
+### 测试
 
 ```java
 import java.util.Scanner;
@@ -2863,7 +2863,7 @@ class ArrayTest3{
 
 
 
-#### 二维数组
+### 二维数组
 
 ```java
 /* 
@@ -2872,13 +2872,87 @@ class ArrayTest3{
 
 class Array2Demo{
 	public static void main(String[] args){
-		int[][] arr=new int[3][2];//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组中含有两个元素。
+		//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组中含有两个元素。
+		int[][] arr=new int[3][2];
 		
-		System.out.println(arr);
-		System.out.println(arr[0]);
-		System.out.println(arr[0][1]);
+		System.out.println(arr);//[[I@15db9742 两个中括号，代表二维数组，I代表其中元素为int类型
+		System.out.println(arr[0]);//[I@6d06d69c 一个中括号代表一维数组，I代表其中元素为int类型
+		System.out.println(arr[0][1]);//0int[][] arr=new int[3][2];//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组中含有两个元素。
+		
+		int[][] arr1=new int[3][];//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组中含有两个元素。
+		System.out.println(arr1);//[[I@7852e922 两个中括号，代表二维数组，I代表其中元素为int类型
+		System.out.println(arr1[0]);//null 该二维数组中所有一维数组为空
+		//System.out.println(arr1[0][1]);//NullPointerException 因为一维数组为空，所以指针没意义
+		
+		//打印二维数组长度
+		int[][] arr2=new int[3][2];
+		System.out.println(arr.length);//打印二维数组的长度，即二维数组中一维数组的个数
+		System.out.println(arr[0].length);//打印二位数组中角标为0的一维数组长度，即一维数组中元素的个数
+		
+		//静态初始化
+		int[][] arr3={{1,6,3},{7,56,13},{9,4,66}};
+		
+		//遍历二维数组
+		for(int i=0;i<arr3.length;i++){
+			for(int j=0;j<arr3[i].length;j++){
+				System.out.print(arr3[i][j]+",");
+			}
+		}
+		System.out.println();
+		
+		Add(arr3);
+	}
+	//求二维数组中所有元素的和
+	public static void Add(int[][] arr){
+		int sum=0;
+		for(int i=0;i<arr.length;i++){
+			for(int j=0;j<arr[i].length;j++){
+				sum+=arr[i][j];
+			}
+		}
+		System.out.println(sum);
 	}
 }
 ```
 
 ![image-20200111155840968](Java学习笔记.assets/image-20200111155840968.png)
+
+![image-20200114114428315](Java学习笔记.assets/image-20200114114428315.png)
+
+# 三、面向对象
+
+## 概述
+
+### 面向过程
+
+举例：
+
+把大象装进冰箱
+
+第一步：把冰箱门打开；
+
+第二步：把大象放进去；
+
+第三步：把冰箱门关上；
+
+很明显，面向过程强调的是过程（动作）。
+
+面向过程的语言：C语言
+
+### 面向对象
+
+顾名思义，强调的是对象（实体）。
+
+冰箱打开
+
+冰箱存储
+
+冰箱关闭
+
+面向对象的语言：C++、Java、C#
+
+#### 特点
+
+1. 面向对象就是一种常见的符合人类思维习惯的编程思路。
+2. 面向对象的出现，将复杂的问题简单化。
+3. 面向对象的出现，让曾经过程中的执行者，变成了对象中的指挥者。
