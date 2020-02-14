@@ -3486,3 +3486,162 @@ this就是其所在函数的所属对象的引用。
 
 5. static修饰的成员储存的是共享数据，对象中存储的是对象特有的数据。
 
+
+
+### 静态变量和成员变量的区别
+
+1.**生命周期不同**
+
+静态变量随着类的创建而存在，随着类的消失而消失；
+
+成员变量随着对象的创建而存在，随着对象被回收而消失；
+
+2.**调用方式不同**
+
+静态变量可以被类名和对象调用；
+
+成员变量只能被对象调用；
+
+3.**别名不同**
+
+静态变量又叫类变量；
+
+成员变量又叫实例变量；
+
+4.**数据的存储位置不同**
+
+静态变量存储在方法区（共享数据区）中的静态区，所以也叫对象的共享数据；
+
+成员变量存储在堆内存中的对象里，所以也叫对象的特有数据。
+
+### 使用静态的注意事项
+
+1.静态方法只能访问静态成员（包括成员变量和成员方法），无法访问非静态成员，非静态方法既可以访问静态成员，又可以访问非静态成员。
+
+```java
+	public static void show(){
+		System.out.println(country+":"+name);
+	}
+/* 
+	在成员函数show()中加入static关键字，编译器会报错：无法从静态上下文中引用非静态 变量 name
+	因为静态成员是随着类的加载而生成并且就可以被调用了，是先于对象存在的，而成员变量name是存在于对象中的，
+	所以可能会出现调用静态函数show()时，name还不存在的情况，所以java就设定了规则，让编译器不予通过，
+	以杜绝这种情况的发生。
+*/
+```
+
+2.静态方法中不能使用this或super关键字。同样是因为，静态方法随着类的加载而生成，先于对象存在，而this关键字就是指向其引用对象的，那么如果没有对象就无法引用，所以不java不允许使用。
+
+3.主函数是静态的。
+
+```java
+class StaticDemo{
+	int num=4;
+	public static void main(String[] args){
+		//show();直接调用不行，编译时会报错，因为静态方法无法调用非静态方法。
+		new StaticDemo().show();//所以我们可以创建一个对象，让对象来调用show()方法。
+	}
+	public void show(){
+		System.out.println(num);
+	}
+}
+```
+
+
+
+### main函数解析
+
+### 特点
+
+1.主函数有固定的格式；
+
+```java
+class MainDemo{
+	public static void main(String[] args){
+		
+	}
+}
+```
+
+
+
+2.主函数被JVM所识别和调用。
+
+### 主函数解析
+
+public：要给主函数最大的权限；
+
+static：不需要创建对象，直接用主函数所属类名进行调用；
+
+```
+java MainDemo.main(.main省略不写)
+```
+
+void：主函数没有具体的返回值，因为没有必要把值返给虚拟机；
+
+main：不是关键字，只是一个JVM能识别的固定的名字；
+
+String[] args：这是主函数的参数列表，是一个元素为字符串类型的数组类型参数，args是这个参数的名字，是arguments的缩写，是一个约定俗成的名字，其实是可以自己命名的。
+
+**注意**
+
+```java
+public static void main(int[] args){
+    
+}
+//这不是主函数，只是名为main的函数，JVM不会将它当作程序的入口
+
+public static void main(String[] x){
+    
+}
+/* 这样就会报错：
+	MainDemo.java:32: 错误: 已在类 MainDemo中定义了方法 main(String[])
+        public static void main(String[] x){
+        因为JVM不知道该从哪个入口进入。
+	*/
+```
+
+
+
+### 参数解析
+
+```java
+
+class MainDemo{
+	public static void main(String[] args){
+		System.out.println(args);
+		/* 结果：[Ljava.lang.String;@15db9742
+			[代表数组；L表示参数很长；
+			java.lang.String代表java.lang包中的String包，也代表数组中的元素类型是String；
+			@15db9742是实体存储的地址的哈希值。
+			以上结果证明JVM在调用主函数时确实给main方法传了一个元素是字符串类型的数组实体进去。
+		*/
+		
+		//那么这个数组有长度吗？
+		System.out.println(args.length);
+		/* 结果：0 
+			这说明JVM传了 new String[0] 这样一个参数。
+			这似乎没有意义。
+			但之所以主函数中有这样一个参数列表，是为了让我们在运行java程序的时候可以传入一些我们需要的参数，
+			这是给使用程序的人留下的入口。
+			而之所以选择用String[]类型的参数，是因为字符串可以兼容数字，字母等类型的数据，可以将字符串转换为其他类型的数据，
+			所以字符串是最通用的数据类型；而为了满足用户传入多个数据的需求，我们选择了元素类型为字符串的数组String[]。
+		*/
+		
+		/* 那么我们怎么传入参数呢？我们在控制台直接传入参数 
+			我们直接在控制台键入：java MainDemo haha hehe xixi（想要传入的参数）
+			我们遍历一下这个参数列表，发现与我们刚刚传入的参数一致。
+		*/
+		for(int i=0;i<args.length;i++){
+			System.out.println(args[i]);
+		}
+	}
+}
+```
+
+**那么我们怎么传入参数呢？**
+
+我们在控制台直接传入参数。我们输入：java MainDemo haha hehe xixi（想要传入的参数）
+
+![image-20200214225559782](Java学习笔记.assets/image-20200214225559782.png)
+
