@@ -3140,72 +3140,75 @@ class PersonDemo{
 ## 构造函数
 
 ```java
-/* 
-	描述小汽车
-	
-	分析：
-	1.属性
-		轮胎数
-		颜色
-	2.行为
-		运行
-		
-	定义类就是定义成员，成员可以分为：
-	成员变量（对应类的属性）；
-	成员函数（对应类的行为）。
- */
- class Car{
-	int num;
-	//int num=4; 显示初始化过程，学过继承之后会了解具体过程
-	String color;
-	void run(){
-		System.out.println(num+"...dududududududududu..."+color);
-	}
- }
- 
- class CarDemo{
-	public static void main(String[] args){
-		//用new关键字在计算机中创建一个car类的实例
-		Car c=new Car();
-		/* 
-		我们先用new关键字创建了一个car类的实例，小括号里是要参与运算的数据和内容，因为car类不需要数据参与运算，所以为空；
-		然后我们需要给这个新创建出来的实例取个名字，用来将它与其他同类的实例区分开。
-		最终，我们得到了一个class类型的引用变量 c ，并指向了该class的对象。
-		*/
-		
-		//我们可以修改对象中的内容
-		c.num=4;
-		c.color="black";
-		
-		//创建了实例之后，我们还得让它运行起来
-		c.run();//要使用对象中的内容，可以通过  对象.成员  的方式来调用。
-		
-		Car c1=new Car();
-		Car c2=new Car();
-		show(c1);
-		show(c2);
-		c1.run();
-		c2.run();
-	}
-	
-	//为了提高代码复用性，我们可以定义一个函数来操作对象,就好比一家汽车改装厂
-	public static void show(Car c)//括号里是类类型参数，类类型的变量一定指向对象，或者null
-	{
-		c.num=4;
-		c.color="white";
-
-	}
-	
+class Person{
+	private String name;
+	private int age;
+	//定义一个Person类的构造函数
 	/* 
-		匿名对象：没有名字的对象
-		Car c=new Car();
-		c.run();
-		可以简写成：
-		new Car().run();
-		当对象对 方法（run） 仅进行 一次 调用时，可以用匿名对象进行简化。
+	构造函数：构造、创建对象时调用的函数。
+	作用：可以将对象初始化。对象不经初始化无法使用。
+	创建函数必须通过构造函数来进行初始化。
+	
+	一个类中如果没有定义构造函数，那么编译时会自动构建一个空构造函数，
+	比如在Person类中就是Person(){}空构造函数。
+	如果类中人为定义了构造函数，那么就不会再自动定义空构造函数。
+	
+	那么一般函数和构造函数有什么区别？
+	构造函数：1.创建对象时，就会创建与之对应的构造函数，将对象初始化；
+				2.
+	一般函数：创建对象后，需要函数功能时才对其进行调用。
 	*/
- }
- 
+	Person(){//这个构造函数还是空参数的,那么我们默认这个人出生时是没有名字的
+		name="baby";
+		age=0;
+		System.out.println("Person Run");
+	}
+	//但有的人出生时就有了名字
+	Person(String n){
+		name=n;
+	}
+	//有的人出生时就有了名字和年龄（笑）
+	Person(String n,int a){
+		name=n;
+		age=a;
+	}
+	//在函数中，仅有参数顺序不同的两个函数也是不同的
+	Person(int a,String n){
+		name=n;
+		age=a;
+	}
+	
+	public void speak(){
+		System.out.println(name+":"+age);
+	}
+	public void setName(String n){
+		name=n;
+	}
+	public String getName(){
+		return name;
+	}
+	public void setAge(int a){
+		age=a;
+	}
+	public int getAge(){
+		return age;
+	}
+}
+
+class ConsDemo{
+	public static void main(String[] args){
+		Person p=new Person();
+		Person p1=new Person("LiMing");
+		Person p2=new Person("LiMing",12);
+		Person p3=new Person(12,"LiMing");
+		p.speak();
+		p1.speak();
+		p2.speak();
+		p3.speak();
+		
+		
+	}
+} 
 ```
 
 
@@ -3474,7 +3477,7 @@ this就是其所在函数的所属对象的引用。
 
 1. static是一个用于修饰成员的修饰符；
 
-2. static修饰的成员被所有同类的对象所共享；
+2. static修饰的成员被所有同类的对象所共享；比如Person类中所有对象都有一个同样的成员属性country=“CN”，那么为了简洁我们就可以给country加上static修饰符，让它成为静态成员变量，被所有同类对象共享；
 
 3. static修饰的成员先于对象存在，因为static修饰的成员随着类的加载就已经被创建了；
 
@@ -3530,7 +3533,7 @@ this就是其所在函数的所属对象的引用。
 */
 ```
 
-2.静态方法中不能使用this或super关键字。同样是因为，静态方法随着类的加载而生成，先于对象存在，而this关键字就是指向其引用对象的，那么如果没有对象就无法引用，所以不java不允许使用。
+2.静态方法中不能使用this或super关键字。同样是因为，静态方法随着类的加载而生成，先于对象存在，而this关键字就是指向其引用对象的，那么如果没有对象就无法引用，所以在java中不允许这样使用。
 
 3.主函数是静态的。
 
@@ -3644,4 +3647,152 @@ class MainDemo{
 我们在控制台直接传入参数。我们输入：java MainDemo haha hehe xixi（想要传入的参数）
 
 ![image-20200214225559782](Java学习笔记.assets/image-20200214225559782.png)
+
+### 加入了static关键字的内存图解
+
+```java
+class Person{
+	private String name;
+	private int age;
+	static String country="CN";
+	public Person(String name,int age){
+		this.name=name;
+		this.age=age;
+	}
+	public void show(){
+		System.out.println(Person.country+":"+this.name+":"+this.age);
+		//此处各个成员前的Person. this. 可以省略，但写上可以提高代码的可读性。
+	}
+	public static void method(){
+		System.out.println(country);
+	}
+}
+class StaticDemo2{
+	public static void main(String[] args){
+		Person.method();
+		/* method方法在其他类中，若其为非静态则要调用必须通过对象；
+		若其为静态，则要调用可以通过类名和对象。 */
+		Person p=new Person("java",20);
+		p.show();
+	}
+}
+```
+
+![image-20200216182747962](Java学习笔记.assets/image-20200216182747962.png)
+
+当我们在控制台输入了 java StaticDemo2 命令执行 StaticDemo2类 的时候，这个类就进内存中的方法区了，该类中的StaticDemo2(){} 默认构造函数也一同被加载进来了。主函数main方法（及其代码）也被加载进了方法区中的静态方法区。以上加载完毕后，JVM就开始根据类名调用main主函数，main主函数压栈，开始执行main函数中的代码。
+
+执行 Person.method(); 要用到Person类，这时，Person才开始加载。JVM会去classpath路径下找Person的类文件，如果没有设置classpath，就会再当前目录寻找，找到后将其加载进内存。其中，构造函数Person(String name,int age)、成员函数show()加载进非静态方法区，静态方法method()和静态成员country加载进静态方法区。JVM在静态方法区找到method()方法，method()压栈，调用方法区中的代码运行结束后，method()方法弹栈。
+
+执行Person p=new Person("java",20); 在栈中的分配给main主函数的内存空间中，创建一个引用变量p，在堆中，开辟空间创建一个对象，在对象的内存空间中创建成员属性name和age，并初始化为默认值，然后调用构造函数Person(String name,int age)，构造函数压栈，构造函数中的this指向该对象，构造函数的内存空间中创建局部变量name和age并为他们赋值，然后开始执行方法区中已经加载的Person(String name,int age)函数代码，将局部变量name和age的值赋给对象中的成员变量name和age。构造函数运行完毕，弹栈。等号右侧的代码运行完毕，把对象的首地址值赋给等号左侧的引用变量p。
+
+执行p.show();  通过对象调用show()，JVM到到非静态方法区找到show()的代码，让show()压栈，给this赋首地址值，指向该对象。show()方法运行完毕，弹栈。
+
+main主函数运行完毕，弹栈。
+
+（方法区就是代码存放区，又叫方法表，就是存放方法以及静态成员的地方；栈属于运行区，栈里存放的是方法运行所需的局部变量。
+
+非静态方法区和静态方法区中的方法都是被共享的，只是调用他们的办法不同，非静态方法只能被对象调用，静态方法能被对象和类名调用。）
+
+
+
+### 什么时候使用静态修饰符？
+
+1.静态变量
+
+类是对事物的抽象，对象是抽象的类所对应的实例。类中定义有成员变量和成员函数，分别用来描述事物的属性和功能。当某种属性是该类的所有对象都具备且**它们的值也一模一样**的，那么我们就可以用静态修饰符static来修饰该成员变量，让它成为静态变量，为所有同类对象共享，这样可以节约内存空间，提高内存使用的效率。
+
+2.静态函数
+
+当类中的成员函数需要访问非静态成员变量（即特有数据）或函数时，该成员函数就必须是非静态函数。
+
+当类中的成员函数不需要访问非静态成员，只需要访问静态变量或“haha”、233这种已经确定的数据或其他静态函数时，该函数就可以定义成静态函数。当然也可以定义为非静态函数，但调用非静态函数一定要通过对象，而对象又是用来封装特有数据的，而该函数又没有访问特有数据，所以这个对象的创建就是毫无意义且浪费资源的，因此我们选择将这种没有访问非静态成员的函数定义为静态函数。
+
+综上，是否将该函数定义为静态函数，取决于该函数是否调用了非静态成员。如果调用了，就不能定义为静态方法，如果没有调用，就可以且推荐定义为非静态函数。
+
+
+
+### 静态代码块
+
+```java
+/* 
+	静态代码块：
+	static{}
+	随着类的加载而执行，且在该类存续期间只执行一次。
+	
+	用处：
+	用于对类进行初始化。一般用于所有成员均为静态的类。
+	因为对于所有成员均为静态的类，没有必要去创建对象，那么也就无法调用构造函数初始化对象中的成员。
+	所以我们可以用静态代码块来对类中的成员进行初始化，且可以进行多步骤的复杂操作。
+	
+ */
+class StaticCode{
+	static int num;
+	static{
+		num=10;
+		num+=10;
+		System.out.println(num);
+	}
+	static void show(){
+		System.out.println("hello");
+	}
+}
+class StaticCodeDemo{
+	public static void main(String[] args){
+		StaticCode.show();
+	}
+}
+```
+
+
+
+### 构造代码块
+
+```java
+/*
+构造代码块：
+	class Demo{
+		{}这是构造代码块
+		
+		public void func(){
+			{}这是局部代码块
+		}
+	}
+	构造代码块随着对象的创建而执行，每创建一个对象，就会执行一次，且先于构造函数执行。
+	
+	作用：用来给对象进行初始化。
+	构造函数初始化的成员一般是该类对象所共有的成员，而构造函数所初始化的成员是某些特定的该类对象所对应的成员。
+*/
+class Person{
+	private String name;
+	
+	{
+		cry();//所有宝宝出生都会哭。
+	}
+	public void cry(){
+		System.out.println("哭得哇哇得！");
+	}//此时name的值还是null，所以说明构造函数还没压栈执行。
+	
+	//有的宝宝出生没名字（对特定的对象的成员进行初始化）
+	Person(){
+		this.name="baby";
+	}
+	
+	//有的宝宝出生有名字（对特定的对象的成员进行初始化）
+	Person(String name){
+		this.name=name;
+	}
+	public void loud(){
+		System.out.println(name);
+	}
+}
+class StaticCodeDemo{
+	public static void main(String[] args){
+		Person p=new Person();
+		p.loud();
+		Person p1=new Person("LiMing");
+		p1.loud();
+	}
+}
+```
 
