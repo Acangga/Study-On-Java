@@ -76,6 +76,9 @@ public class ArrayTool{
 	@param arr 接收一个元素类型为int的数组
 	@param x 其中一个元素的索引
 	@param y 另一个元素的索引
+	
+	javadoc只能识别public和protected权限的函数，private权限的无法被识别。
+	所以此处没必要写文档注释。
 	*/
 	private void swap(int[] arr,int x,int y){
 		int temp=arr[x];

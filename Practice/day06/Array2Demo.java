@@ -11,7 +11,7 @@ class Array2Demo{
 		System.out.println(arr[0]);//[I@6d06d69c 一个中括号代表一维数组，I代表其中元素为int类型
 		System.out.println(arr[0][1]);//0int[][] arr=new int[3][2];//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组中含有两个元素。
 		
-		int[][] arr1=new int[3][];//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组中含有两个元素。
+		int[][] arr1=new int[3][];//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组都为空。
 		System.out.println(arr1);//[[I@7852e922 两个中括号，代表二维数组，I代表其中元素为int类型
 		System.out.println(arr1[0]);//null 该二维数组中所有一维数组为空
 		//System.out.println(arr1[0][1]);//NullPointerException 因为一维数组为空，所以指针没意义

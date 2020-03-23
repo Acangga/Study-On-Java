@@ -1505,11 +1505,14 @@ class ForTest{
 		那么for循环和while循环有什么异同呢？
 		1.for和while在功能上是一样的，用for可以实现的，用while也可以。
 		2.在格式上不同。
-		3.在使用场景上有一点区别，当需要用一个变量来控制循环，但该变量又只有这一个作用时，推荐用for循环，可以节省内存空间。
+		3.在使用场景上有一点区别
+			A.当需要用一个变量来控制循环，但该变量又只有这一个作用时，推荐用for循环，可以节省内存空间。
 			若在循环结束后仍需用到该变量，推荐使用循环while。
 			因为在for循环结束后，该变量所占用的内存就被释放了，它的作用域就是for循环的范围，而while循环中的变量需要单独定义，
 			它的作用域是包含while所在的大括号的范围，所以在while循环结束后，这个变量仍存在于内存中，可以被操作。
-			总结：主要考虑程序的可读性和美观,对于效率问题,可以不用考虑差异性. 所以推荐,在循环次数确定时,用for,不确定时,用while~~
+			B.对一个数组进行循环时，一般来说，如果每轮循环都是在循环处理完后才将循环变量增加的话，使用for循环比较方便；如果循环处理的过程中就要将循环变量增加时，则使用while循环比较方便（可以把i++写在while循环体里面）；
+			C.还有在使用for循环语句时，如果里面的循环条件很长，可以考虑用while循环进行替代，使代码的排版格式好看一些。
+			总结：主要考虑程序的可读性和美观,对于效率问题,可以不用考虑差异. 所以推荐,在循环次数确定时,用for,不确定时,用while~~
 		*/
 		int x=1;
 		while(x<5){
@@ -1524,7 +1527,14 @@ class ForTest{
 		System.out.println("y======"+y);
 		//报错：找不到变量y，因为for循环结束后，变量y占用的内存已经被释放，y已经不复存在。
 		
-		/* 无限循环：有时我们也不知道需要循环何时停止，就需要让让它一直进行，直到满足某些条件。
+```
+
+
+
+#### 死循环
+
+```java
+/* 无限循环：有时我们也不知道需要循环何时停止，就需要让让它一直进行，直到满足某些条件。
 		while(true){
 			
 		}
@@ -1538,9 +1548,74 @@ class ForTest{
 }
 /*1. 两种循环在构造死循环时的区别
 用while构造死循环时，一般会使用while(TRUE)来构造死循环；而用for来构造死循环时，则使用for(;;)来构造死循环。这两个死循环的区别是：while循环里的条件被看成表达式，因此，当用while构造死循环时，里面的TRUE实际上被看成永远为真的表达式，这种情况容易产生混淆，有些工具软件如PC-Lint就会认为出错了，因此构造死循环时，最好使用for(;;)来进行。
-2. 两种循环在普通循环时的区别
-对一个数组进行循环时，一般来说，如果每轮循环都是在循环处理完后才讲循环变量增加的话，使用for循环比较方便；如果循环处理的过程中就要将循环变量增加时，则使用while循环比较方便；还有在使用for循环语句时，如果里面的循环条件很长，可以考虑用while循环进行替代，使代码的排版格式好看一些。*/
+*/
 ```
+
+
+
+##### 死循环案例
+
+```java
+/*
+	需求：小芳的妈妈每天给她2.5元钱，她都会存起来，但是，
+	      每当这一天是存钱的第5天或者5的倍数的话，她都会花去6元钱，
+		  请问，经过多少天，小芳才可以存到100元钱。
+
+	分析：
+		A:小芳的妈妈每天给她2.5元钱
+			double dayMoney = 2.5;
+		B:她都会存起来
+			double daySum = 0;
+		C:从第一天开始存储
+			int dayCount = 1;
+		D:经过多少天，小芳才可以存到100元钱。
+			double result = 100;
+		E:这一天是存钱的第5天或者5的倍数的话，她都会花去6元钱，
+			说明要判断dayCount的值，如果对5整除就减去6元钱。
+				daySum -= 6;
+		  由此还隐含了一个问题，就是如果不是5的倍数天的话，钱要累加
+				daySum += dayMoney;
+		F:因为不知道是多少天，所以我用死循环，一旦超过100元我就退出循环。
+*/
+class WhileDemo {
+	public static void main(String[] args) {
+		//每天要存储的钱是2.5元
+		double dayMoney = 2.5;
+		
+		//存钱的初始化值是0
+		double daySum = 0;
+		
+		//从第一天开始存储
+		int dayCount = 1;
+		
+		//最终存储不小于100就不存储了
+		int result = 100;
+		
+		//因为不知道是多少天，所以我用死循环，
+		while(true) {
+			//累加钱
+			daySum += dayMoney;
+			
+			//一旦超过100元我就退出循环。
+			if(daySum >= result) {
+				System.out.println("共花了"+dayCount+"天存储了100元");
+				break;
+			}
+			
+			if(dayCount%5 == 0) {
+				//花去6元钱
+				daySum -= 6;
+				System.out.println("第"+dayCount+"天花了6元钱");
+			}
+			
+			//天数变化
+			dayCount++;
+		}
+	}
+}
+```
+
+
 
 #### 循环结构的使用场景
 
@@ -1735,7 +1810,7 @@ class ForTest3{
 class BreakContinueDemo{
 	public static void main(String[] args){
 		/* 
-		break:跳出
+		break:跳出当前循环
 		break的适用范围：switch语句和循环语句
 		break语句单独存在时，在它后面的语句是执行不到的，所以即使写了也没有意义。
 		break只跳出当前所在的循环。
@@ -1774,11 +1849,17 @@ class BreakContinueDemo{
 }
 ```
 
+#### return
+
+return和循环没有关系，return是跳出当前方法。
+
+
+
 ## 函数
 
 ### 定义
 
-函数就是定义在**类**中的具有**特定功能**的一段**独立小程序**。函数也成为方法。
+函数就是定义在**类**中的具有**特定功能**的一段**独立小程序**。函数也称为方法。
 
 ```java
 class FunctionDemo{
@@ -2043,6 +2124,26 @@ class FunctionTest5{
 
 变量只能装载一个数据，数组则可以装载一组同类型数据。
 
+### 数组的初始化
+
+#### 概念
+
+Java中的数组必须经过初始化才能使用。
+
+初始化就是为数组中的元素分配内存空间，并为每个元素赋值。
+
+#### 数组初始化的方式
+
+##### 动态初始化
+
+初始化时，只指定数组长度，由系统为数组分配初始值。
+
+##### 静态初始化
+
+初始化时，指定每个数组元素的初始值，由系统决定数组长度。
+
+
+
 ### 声明与创建数组
 
 ```java
@@ -2060,7 +2161,7 @@ class ArrayDemo1{
 		arr=new int[3];//动态初始化，因为数组中的元素只是被赋予了默认值，还会动态变化。
 		arr1=new int[]{11,22,33};//静态初始化，因为数组中的元素已经确定。
 		/* 上述语句中，我们做了两件事：
-			1.用new语句创建了一个数组；
+			1.new：为数组分配内存空间；
 			2.将创建的数组的引用赋值给了arr和arr1.
 		*/
 		
@@ -2079,12 +2180,11 @@ class ArrayDemo1{
 		像数组这样的容器是计算机编程语言中的重点内容。
 		*/
 		
-		
+		System.out.println(arr);
+        //因为数组是引用类型变量，所以这里打印出来的会是数组所引用的实体在堆内存中的首地址值。
 	}
 }
 ```
-
-
 
 
 
@@ -2113,7 +2213,7 @@ class ArrayDemo{
 
 2.本地方法区：和本地系统相关
 
-3.方法区
+3.方法区（见后文）
 
 4.栈内存
 
@@ -2863,34 +2963,125 @@ class ArrayTest3{
 
 
 
-### 二维数组
+## 二维数组
+
+### 格式一
 
 ```java
 /* 
-	创建二维数组的格式
- */
+二维数组：元素为一维数组的数组。
 
+格式一：
+	数据类型[][] 数组名=new 数据类型[m][n]
+	m:表示这个二维数组中有多少个一维数组。
+	n:表示每个一维数组中有多少个元素。
+	
+注意：
+	A:以下格式也可以表示二维数组（但不推荐）
+		a：数据类型 数组名[][]=new 数据类型[m][n];
+		b：数据类型[] 数组名[]=new 数据类型[m][n];
+	B:注意下面定义的区别：
+		a：int x,y;
+			其实相当于
+			int x;
+			int y;
+		b:int[] x,y[];
+			其实相当于
+			int[] x; 即声明了一个一维数组
+			int[] y[]; 即声明了一个二维数组
+*/
+
+class Array2Demo2{
+	public static void main(String[] args){
+		int[][] arr=new int[3][2];
+		System.out.println(arr);//[[I@15db9742
+		System.out.println(arr[1]);//[[I@15db9742
+		System.out.println(arr[1][1]);//0
+		
+	}	
+}
+```
+
+#### 格式一内存图解
+
+![image-20200219162755347](Java学习笔记.assets/image-20200219162755347.png)
+
+### 格式二
+
+```java
+/*
+格式二：
+	数据类型[][] 数组名=new 数据类型[m][];
+	m:表示二维数组中的一维数组个数。
+	没有n（列数），也就是说可以动态地给出列数，即列数可变。
+*/
+class Array2Demo3{
+	public static void main(String[] args){
+		
+		int[][] arr=new int[3][];
+		
+		System.out.println(arr);//[[I@15db9742
+		System.out.println(arr[0]);//null
+		System.out.println(arr[1]);//null
+		System.out.println(arr[2]);//null
+		//System.out.println(arr[1][1]);//java.lang.NullPointerException
+		
+		//动态地为一维数组们分配空间
+		arr[0]=new int[2];
+		arr[1]=new int[3];
+		arr[2]=new int[1];
+		
+		System.out.println(arr[0]);//[I@6d06d69c
+		System.out.println(arr[1]);//[I@7852e922
+		System.out.println(arr[2]);//[I@4e25154f
+		
+		System.out.println(arr[1][0]);//0
+		System.out.println(arr[1][1]);//0
+		System.out.println(arr[1][2]);//0
+        
+        arr[1][0]=100;
+		arr[1][2]=200;
+	}
+}
+```
+
+#### 格式二内存图解
+
+![image-20200219170847775](Java学习笔记.assets/image-20200219170847775.png)
+
+### 格式三
+
+```java
+/*
+格式三：
+	数据类型[][] 数组名=new 数据类型[][]{元素1,元素2,...},{元素1,元素2,...},...,{元素1,元素2,...};
+	
+	简写形式：
+		数据类型[][] 数组名={元素1,元素2,...},{元素1,元素2,...},...,{元素1,元素2,...};
+*/
+
+class Array2Demo3{
+	public static void main(String[] args){
+		
+		int[][] arr={1,2,3},{4,5},{6};
+		
+		System.out.println(arr);
+		System.out.println(arr[0]);
+		System.out.println(arr[0][1]);
+		
+	}
+}
+```
+
+#### 格式三内存图解
+
+![image-20200219172126633](Java学习笔记.assets/image-20200219172126633.png)
+
+### 练习
+
+```java
 class Array2Demo{
 	public static void main(String[] args){
-		//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组中含有两个元素。
-		int[][] arr=new int[3][2];
-		
-		System.out.println(arr);//[[I@15db9742 两个中括号，代表二维数组，I代表其中元素为int类型
-		System.out.println(arr[0]);//[I@6d06d69c 一个中括号代表一维数组，I代表其中元素为int类型
-		System.out.println(arr[0][1]);//0int[][] arr=new int[3][2];//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组中含有两个元素。
-		
-		int[][] arr1=new int[3][];//动态初始化，创建一个二维数组，该数组中含有三个一维数组，每个一维数组中含有两个元素。
-		System.out.println(arr1);//[[I@7852e922 两个中括号，代表二维数组，I代表其中元素为int类型
-		System.out.println(arr1[0]);//null 该二维数组中所有一维数组为空
-		//System.out.println(arr1[0][1]);//NullPointerException 因为一维数组为空，所以指针没意义
-		
-		//打印二维数组长度
-		int[][] arr2=new int[3][2];
-		System.out.println(arr.length);//打印二维数组的长度，即二维数组中一维数组的个数
-		System.out.println(arr[0].length);//打印二位数组中角标为0的一维数组长度，即一维数组中元素的个数
-		
-		//静态初始化
-		int[][] arr3={{1,6,3},{7,56,13},{9,4,66}};
 		
 		//遍历二维数组
 		for(int i=0;i<arr3.length;i++){
@@ -2916,14 +3107,6 @@ class Array2Demo{
 ```
 
 
-
-#### 二维数组内存图解
-
-
-
-![image-20200111155840968](Java学习笔记.assets/image-20200111155840968.png)
-
-![image-20200114114428315](Java学习笔记.assets/image-20200114114428315.png)
 
 # 三、面向对象
 
@@ -3125,7 +3308,7 @@ class PersonDemo{
 
 **封装**是指隐藏对象的属性和实现细节，仅对外提供公共访问方式。
 
-##### 好处：
+##### 好处
 
 安全性；
 
@@ -3135,15 +3318,33 @@ class PersonDemo{
 
 便于使用。
 
-##### 原则：
+##### 原则
 
 将不需要对外提供的内容都隐藏起来；
 
 把属性都隐藏，提供公共方法对其访问。
 
-##### 注：
+##### 注
 
 在java中，最小的封装体是函数，类也是封装体。
+
+### private关键字
+
+#### 概念
+
+是一个权限修饰符；
+
+可以修饰成员（变量和方法）；
+
+被private修饰的成员只有在本类中才能访问；
+
+#### 应用
+
+最常见的应用：
+
+用private修饰成员变量，提供对应的getXxx()、setXxx()方法来对其进行访问；
+
+用private修饰方法并不常见，类中的私有方法如果要在其他类中调用，还需要用一个public权限的方法来调用它。
 
 
 
@@ -3606,17 +3807,17 @@ class MainDemo{
 
 ### 主函数解析
 
-public：要给主函数最大的权限；
+public：公共的，要给主函数最大的访问权限；
 
-static：不需要创建对象，直接用主函数所属类名进行调用；
+static：不需要创建对象，直接用主函数所属类名进行调用，方便JVM的调用；
 
 ```
 java MainDemo.main(.main省略不写)
 ```
 
-void：主函数没有具体的返回值，因为没有必要把值返给虚拟机；
+void：主函数没有具体的返回值，因为方法的返回值是返回给调用者，而main方法被JVM调用，把值返给JVM没有意义；
 
-main：不是关键字，只是一个JVM能识别的固定的名字；
+main：不是关键字，只是一个JVM能识别的固定的名字，一个常见的方法入口；
 
 String[] args：这是主函数的参数列表，是一个元素为字符串类型的数组类型参数，args是这个参数的名字，是arguments的缩写，是一个约定俗成的名字，其实是可以自己命名的。
 
@@ -3684,6 +3885,8 @@ class MainDemo{
 
 ### 加入了静态成员的内存图解
 
+例一：
+
 ```java
 class Person{
 	private String name;
@@ -3728,7 +3931,76 @@ main主函数运行完毕，弹栈。
 
 非静态方法区和静态方法区中的方法都是被共享的，只是调用他们的办法不同，非静态方法只能被对象调用，静态方法能被对象和类名调用。）
 
+例二：
 
+```java
+/*
+	定义一个人类
+	
+	姓名和年龄都是变化的，这个我能接收，因为每个人的姓名和年龄是不同的。
+	但是，我们现在选取的几个人都是中国人，他们的国籍是一样的。
+	一样的国籍，我每次创建对象，在堆内存都要开辟这样的空间，
+	我就觉得有点浪费了。怎么办呢? 
+		针对多个对象有共同的这样的成员变量值的时候，
+		Java就提高了一个关键字来修饰：static。
+*/
+class Person {
+	//姓名
+	String name;
+	//年龄
+	int age;
+	//国籍
+	//String country;
+	static String country;
+	
+	public Person(){}
+	
+	public Person(String name,int age) {
+		this.name = name;
+		this.age = age;
+	}
+	
+	public Person(String name,int age,String country) {
+		this.name = name;
+		this.age = age;
+		this.country = country;
+	}
+	
+	public void show() {
+		System.out.println("姓名："+name+",年龄："+age+",国籍："+country);
+	}
+}
+
+class PersonDemo {
+	public static void main(String[] args) {
+		//创建对象1
+		Person p1 = new Person("邓丽君",16,"中国");
+		p1.show();
+		
+		//创建对象2
+		//Person p2 = new Person("杨幂",22,"中国");
+		//p2.show();
+		Person p2 = new Person("杨幂",22);
+		p2.show();
+		
+		//创建对象3
+		//Person p3 = new Person("凤姐",20,"中国");
+		//p3.show();
+		Person p3 = new Person("凤姐",20);
+		p3.show();
+		
+		p3.country = "美国";
+		p3.show();
+		
+		p1.show();
+		p2.show();
+	}
+}
+```
+
+
+
+![static的内存图解.bmp](Java学习笔记.assets/static的内存图解.bmp)
 
 ### 什么时候使用静态修饰符？
 
@@ -3799,7 +4071,7 @@ class StaticCodeDemo{
 	构造代码块随着对象的创建而执行，每创建一个对象，就会执行一次，且先于构造函数执行。
 	
 	作用：用来给对象进行初始化。
-	构造函数初始化的成员一般是该类对象所共有的成员，而构造函数所初始化的成员是某些特定的该类对象所对应的成员。
+	构造代码块初始化的成员一般是该类对象所共有的成员，而构造函数所初始化的成员是某些特定的该类对象所对应的成员。
 */
 class Person{
 	private String name;
@@ -3833,6 +4105,77 @@ class StaticCodeDemo{
 	}
 }
 ```
+
+
+
+#### 小案例
+
+```java
+/*
+	写程序的执行结果。
+	
+	输出结果如下：
+	
+	林青霞都60了，我很伤心
+	我是main方法
+	Student 静态代码块
+	Student 构造代码块
+	Student 构造方法
+	Student 构造代码块
+	Student 构造方法
+*/
+class Student {
+	static {
+		System.out.println("Student 静态代码块");
+	}
+	
+	{
+		System.out.println("Student 构造代码块");
+	}
+	
+	public Student() {
+		System.out.println("Student 构造方法");
+	}
+}
+
+class StudentDemo {
+	static {
+		System.out.println("林青霞都60了，我很伤心");
+	}
+	
+	public static void main(String[] args) {
+		System.out.println("我是main方法");
+		
+		Student s1 = new Student();
+		Student s2 = new Student();
+	}
+}
+```
+
+
+
+### 工具类
+
+#### 定义
+
+该类中没有任何非静态成员变量（所以成员方法不可能调用非静态方法），只有成员方法，这种类我们将之称为工具类。
+
+#### 写法
+
+该类的对象也就不会封装有任何特有数据，只是一个空对象白白占用内存空间，所以创建该类的对象没有意义。
+那么我们可以将该类中的成员函数定义为静态函数，直接通过类名调用这些函数。
+
+#### 使用方式
+
+这样一个工具类，可以为其他程序所用，直接将.class类文件传送给他人，供其调用即可。
+但是，其他人如何知道这个类提供了什么样的方法呢？又该如何调用呢？函数名是什么？
+为了解决这个问题，Java提供了文档注释功能和javadoc程序来生成说明文档。
+
+想要用.class文件中的方法，需要将该.class文件与主函数所在的.class文件放到统一目录下，或者手动配置classpath路径，`set classpath=.;要用的class文件所在绝对目录`。
+
+### 文档注释
+
+格式：`/**  */`
 
 
 
@@ -4004,34 +4347,1563 @@ public class ArrayTool{
 
 
 
-### 工具类
+## 补充——Java 中 field 和 variable 区别及相关术语解释
 
-#### 定义
+先说一下 field 和 variable 之间的区别：
 
-该类中没有任何非静态成员变量（所以成员方法不可能调用非静态方法），只有成员方法，这种类我们将之称为工具类。
+> class variables and instance variables are fields while local variables and parameter variables are not. All fields are variables.
 
-#### 写法
+成员变量（field）是指类的数据成员，而方法内部的局部变量（local variable）、参数变量（parameter variable）不能称作 field。field 属于 variable，也就是说 **variable 的范围更大。**
 
-该类的对象也就不会封装有任何特有数据，只是一个空对象白白占用内存空间，所以创建该类的对象没有意义。
-那么我们可以将该类中的成员函数定义为静态函数，直接通过类名调用这些函数。
+## 术语解释：
 
-#### 使用方式
+1. **域或字段、实例变量、成员变量** （field, instance variable, member variable, non-static field）
 
-这样一个工具类，可以为其他程序所用，直接将.class类文件传送给他人，供其调用即可。
-但是，其他人如何知道这个类提供了什么样的方法呢？又该如何调用呢？函数名是什么？
-为了解决这个问题，Java提供了文档注释功能和javadoc程序来生成说明文档。
+   > field: A data member of a class. Unless specified otherwise, a field is not static.
 
-想要用.class文件中的方法，需要将该.class文件与主函数所在的.class文件放到统一目录下，或者手动配置classpath路径，`set classpath=.;要用的class文件所在绝对目录`。
+   - 非 static 修饰的变量。
+   - 虽然有如上定义，但是一般在使用时，成员变量（field）包括 instance variable 和 class variable。为了区分，个人认为，用实例变量/非静态变量（instance variable / non-static field）描述上面的定义更佳。
+   - 成员变量与特定的对象相关联，只能通过对象（new）访问。
+   - 声明在类中，但不在方法或构造方法中。
+   - 如果有多个对象的实例，则每一个实例都会持有一份成员变量，实例之间不共享成员变量的数据。
+   - 作用域比静态变量小，可以在类中或者非静态方法中使用以及通过生成实例对象使用。（访问限制则不可用）
+   - JVM在初始化类的时候会给成员变量赋初始值。
 
-#### 文档注释
+   Example:
 
-格式：`/**  */`
+   ```
+     public class FieldTest {
+          private int Xvalue; // Xvalue  is a field
+          public void showX() {
+               System.out.println("X is: " + xValue);
+          }
+     }
+   ```
+
+**2. 类字段、静态字段、静态变量**（class variable, static field, staic variable）
+
+- 使用 static 修饰的字段，一般叫做静态变量。
+
+- 声明在类中，但不在方法或构造方法中。
+
+- 多个实例对象共享一份静态变量
+
+- JVM在准备类的时候会给静态变量赋初始值。
+
+- 作用域最大，类中都可以访问，或通过 类名.变量名 的方式调用（访问限制则不可用）。
+
+  Example:
+
+  ```
+  System.out.println(Integer.MAX_VALUE);
+  ```
+
+**3. 局部变量**（local variable）
+
+- 定义在一个区块内（通常会用大括号包裹），没有访问修饰符，区块外部无法使用的变量。
+
+- 没有默认值，所以必须赋初始值
+
+- 生命周期即为方法的生命周期
+
+  Example:
+
+  ```
+  if(x > 10) {
+      String local = "Local value";
+  }
+  ```
+
+**4. 参数**（input parameter, parameter (variable), argument）
+
+参数，这个就不多说了，要注意的是 argument 和 parameter 的区别（下文）。
+另外，Oracle 官方将参数分为了构造参数、方法参数和异常参数三部分。 Example:
+
+```
+    public class Point {
+        private int xValue;
+        public Point(int x) {
+            xValue = x;
+        }
+        public void setX(int x) {
+            xValue = x;
+        }
+    }
+```
+
+> Strictly speaking, a parameter is a variable within the definition of a method. An argument would be the data or actual value which is passed to the method. An example of parameter usage: `int numberAdder(first, second)` An example of argument usage: `numberAdder(4,2)`
+
+**parameter是形式参数，argument是实际参数。**
+
+**5. 不可变量、常量**（final variable, constant）
+
+使用 final 关键词修饰的变量。不可变量属于成员变量。
+
+**6. 成员**（member）
+
+> A field or method of a class. Unless specified otherwise, a member is not static.
+
+指的是类中非静态的成员变量或方法。（用法同field）
+
+**7. 属性**（property）
+
+> Characteristics of an object that users can set, such as the color of a window.
+
+可被用户设置或获取的对象特征即为属性。
+POJO 或 JavaBean 中的成员变量也称作属性（具有set、getter方法）。
+
+补充了这些，想问问大家，重写（Override）、重载（Overload）你掌握的如何？是否又听说过 Java 中的隐藏（Hide）、遮蔽（Shadow）、遮掩（obscure）机制？
+
+**最后，总结一下国内目前的惯用法**（英文取其一，序号对应上文）：
+
+1. field -> 成员变量， instance variable / non-static field -> 实例变量/非静态变量
+2. class variable -> 静态变量
+3. local variable -> 局部变量
+4. input parameter -> 参数
+5. final variable -> 常量
+6. member -> 成员（用法同field）
+7. property -> 属性
+
+## JDK提供的帮助文档——Java API 说明书
+
+### 如何下载
+
+1. 登录Oracle官网（https://www.oracle.com/）。
+
+2. 进入Java页面。
+
+   ![](Java学习笔记.assets/批注 2020-02-20 163845.png)
 
 
 
+3. 将页面拉到底部
+
+![image-20200220164319749](Java学习笔记.assets/image-20200220164319749.png)
 
 
 
+4. 页面中间
+
+![image-20200220164359315](Java学习笔记.assets/image-20200220164359315.png)
+
+5. ![image-20200220164652505](Java学习笔记.assets/image-20200220164652505.png)
+6. 
+
+![image-20200220164612305](Java学习笔记.assets/image-20200220164612305.png)
+
+7. 下拉
+
+![image-20200220164742916](Java学习笔记.assets/image-20200220164742916.png)
+
+8. ![image-20200220164801368](Java学习笔记.assets/image-20200220164801368.png)
+
+9. ![image-20200220164848635](Java学习笔记.assets/image-20200220164848635.png)
+
+10. ![image-20200220164919119](Java学习笔记.assets/image-20200220164919119.png)
+
+11. 下载完成后解压到任意目录；打开doc\api目录，打开index页面，尽情享受即可。
+
+### 如何使用
+
+1. 搜索想要了解的类、方法的关键字。
+
+2. 查看其所在的包，因为除了java.lang包中的类以外，其余均需导入。
+
+3. 查看该类的版本，确定自己当前使用的java版本已经包含了该类。
+
+4. 读读说明
+
+5. 看该类的结构：
+
+	- 构造方法==》Constructor Summary
+
+	- 成员变量==》Field Summary
+
+	- 成员方法==》Method Summary
+
+6. 看构造方法
+
+	- 有构造方法：根据构造方法的说明创建对象
+	
+	- 没构造方法：成员可能都是静态的
+	
+7. 看成员方法
+
+	- 看Modifier and Type（修饰符和返回值类型）
+	
+	- 看Method and Description，可以得知该方法的名称、参数列表和功能
+
+#### 补充：All Methods
+
+- Concrete Methods (Not Abstract Methods)
+  - Static Methods
+  - Instance Methods
+- Abstract Methods
+
+### 练习：随机数游戏
+
+```java
+/*
+目标：通过API文档学习使用math类中的方法，来生成一个随机数。
+
+1. 找到math类
+2. math类属于java.lang包，无需导包
+3. 看版本
+4. 看math类的结构，没构造函数，所有成员都是静态
+5. 看method summary，找到可以生成随机数的方法
+6. 找到random()方法，
+7. 研究random()的修饰符、返回值类型、和参数列表
+8. 在程序中调用random()
+
+*/
+import java.util.Scanner;
+
+class MathDemo{
+	public static void main(String[] args){
+		/* double a=Math.random();
+		System.out.println(a);
+		
+		//再生成一百个零到一百间的随机数
+		for(int i=0;i<100;i++){
+			int b=(int)(Math.random()*100)+1;
+			System.out.println(b);
+		} */
+		new MathGame().game();
+		
+	}
+}
+
+/*
+我们再来做一个猜随机数的小游戏
+分析：
+	创建一个0-100的随机整数a
+	输入一个整数b
+	
+	判断b==a
+	如果相等，输出“你猜对了”
+	如果b>a，输出“大了”
+	如果b<a，输出“小了”
+	
+	循环上述过程，直到a==b为true
+	因为循环次数未知且判断条件复杂，所以用死循环
+	
+*/
+class MathGame{
+	public static void game(){
+		int a=(int)(Math.random()*100)+1;
+		for(;;){
+			System.out.println("请输入你猜的数字:");
+			Scanner s=new Scanner(System.in);
+			int b=s.nextInt();
+			if(b==a){
+				System.out.println("你猜对了");
+				return;
+			}else if(b>a){
+				System.out.println("大了");
+			}else{
+				System.out.println("小了");
+			}
+		}
+	}
+}
+```
 
 
+
+## 继承
+
+有时候一些类中具有同样的成员，就需要重复写相同的代码，比较麻烦。所以我们考虑能不能把这些成员分离出来，给这些类共同使用。如果进一步考虑如何实现，我们想到可以将这些相同的成员封装在一个类中，然后在需要使用这些成员的多个类和这一个类之间构造一种关系即可。Java就给我们提供了这样一种方式——**继承**。
+
+### 概念
+
+多个类中存在相同的属性和行为，将这些属性和行为抽取到单独的一个类中，那么多个类就无需再定义这些属性和行为，只需继承这个类即可。
+
+单独的这个类成为父类、基类或超类；
+
+这多个类称为子类或派生类。
+
+子类可以在继承父类的基础上再定义自己的新成员。
+
+### 实现方式
+
+`extends`关键字
+
+### 格式
+
+```java
+/*
+class 父类名称{}
+class 子类名称 extends 父类名称{}
+*/
+
+class Person{
+	String name;
+	int age;
+	/* Person(String name,int age){
+		this.name=name;
+		this.age=age;
+	} 构造方法的使用方法见后文 
+	*/
+	public void eat(){
+		System.out.println("eat");
+	}
+	public void sleep(){
+		System.out.println("sleep");
+	}
+	public void show(){
+		System.out.println(name+":"+age);
+	}
+}
+
+class Student extends Person{
+	
+}
+class Teacher extends Person{
+	
+}
+
+class ExtendsDemo{
+	public static void main(String[] args){
+		Student s=new Student();
+		s.eat();
+		s.sleep();
+		Teacher t=new Teacher();
+		t.eat();
+		t.sleep();
+	}	
+}
+```
+
+### 优点
+
+1. 提高了代码复用性：多个类中相同的成员可以抽取到一个类中；
+2. 提高了代码的可维护性：如果成员代码需要修改，只需修改父类中的代码即可；
+3. 让类与类之间产生了联系，是多态的前提：这也是继承的弊端之一，因为继承提高了类的耦合性。
+
+### 弊端
+
+1. 提高了类的耦合性。
+2. 打破了类的封装性。
+
+### 耦合、内聚
+
+耦合：类与类之间的关系。
+
+内聚：自己完成某件事的能力。
+
+开发原则：低耦合，高内聚。
+
+### 特点
+
+1. Java中只支持单继承，不支持多继承。
+
+但有些语言是支持多继承的，格式：`extends class1,class2,...`
+
+2. Java支持多层继承，爷传子，子传孙。
+
+```java
+class GrandFather{
+	void show(){
+		System.out.println("I'm your grandfahter.");
+	}
+}
+class Father extends GrandFather{
+	void method(){
+		System.out.println("I'm your fahter.");
+	}
+}
+class Son extends Father{
+	
+}
+
+class ExtendsDemo2{
+	/* ExtendsDemo2.java:17: 错误: 需要<标识符>
+        s.show();
+	总忘记写主函数…… */
+	public static void main(String[] args){
+		Son s=new Son();
+		s.show();//爷爷的
+		s.method();//爸爸的
+	}	
+}
+```
+
+### 补充：访问权限
+
+如果没有写就是默认访问权限
+
+java的类有2种访问权限，public、默认
+
+而方法和变量有4种：public、默认、protected、private
+
+其中默认访问权限和protected很相似，有着细微的差别。
+
+public意味着任何地方的其他类都能访问
+默认则是同一个包的类可以访问。
+protected表示同一个包的类可以访问，其他的包的该类的子类也可以访问。
+private表示只有自己类能访问。
+
+### 注意事项
+
+1. 子类只能继承父类所有非私有的成员（成员变量、成员方法）。
+2. 子类不能继承父类的构造方法，但可以通过super关键字（见后文）访问父类的构造方法。
+3. 不要为了部分功能而去继承。
+
+```java
+class A{
+    void show1();
+    void show2();
+}
+class B{
+    void show2();
+    void show3();
+}
+//我们发现class B 中有跟class A 一样的方法show2()，于是我们想到继承。
+class B extends A{
+    void show3();
+}
+/*
+这样其实不好，因为你不光继承了show2()，你还继承了shwo1()，show1()有可能不是你想要的。
+*/
+```
+
+### 使用场景
+
+继承其实体现了一种从属关系（A is a B.）。
+
+比如：
+
+Person
+
+​	Student
+
+​	Teacher
+
+水果
+
+​	苹果
+
+​	香蕉
+
+所以我们再考虑是否该使用继承的时候可以进行假设，如果A类是B类的一种，或者B类是A类的一种，就可以考略使用继承。
+
+### super关键字
+
+![image-20200227193503068](Java学习笔记.assets/image-20200227193503068.png)
+
+#### this和super的对比
+
+#### 概念
+
+this代表本类对应的引用；
+
+super代表父类存储空间的标识（也可以理解为父类的引用，可以操作父类的成员）；
+
+#### 应用
+
+1. 调用成员变量
+   - this.成员变量名：调用本类成员变量
+   - super.成员变量名：调用父类成员变量
+2. 调用构造方法
+   - tihs(args)：调用本类构造方法
+   - super(args)：调用父类构造方法
+3. 调用成员方法
+   - this.成员方法：调用本类成员方法
+   - super.成员方法：调用父类成员方法
+
+### 对象实例化过程
+
+创建子类对象时是不会创建父类对象的，只不过是调用父类构造方法来初始化父类属性。
+
+这些父类属性是和子类的属性储存在同一片内存空间的。
+
+### 继承中成员间的关系
+
+类由成员变量、成员方法、构造方法组成。那么引入了继承关系之后，父类和子类中的各个组成部分之间有怎样的关系呢？
+
+#### 成员变量
+
+1. 父类和子类中的成员变量名称不一样时
+   - 父类中的成员用this、super或不用关键字（编译器自动添加）都可以访问。
+   - 子类中的成员则须用this关键字或不用关键字访问。
+2. 父类和子类中的成员变量名称一样时
+   - 父类成员用super关键字访问
+   - 子类成员用this关键字（显式或隐式）访问
+3. 父类和子类中的成员变量名称一样而没有用super或this特别指明引用时，在访问时的查找顺序如下：
+   - 在子类的局部查找，找到就访问；
+   - 在子类的成员范围查找，找到就访问；
+   - 在父类的成员范围查找，找到就访问；
+   - 如果还找不到，就报错。
+4. 父类和子类中的成员变量名称一样而想直接精准访问时，
+5. 如果成员变量（或方法）是私有的，就不能被继承，用子类无法访问。
+
+```java
+class Father{
+    int num=1;
+    void method(){
+		int num=5//方法不经调用时不会压栈的，所以也无法访问到这个num
+	}
+}
+class Son extends Father{
+    int num2=2;
+    int num=3;
+	void show(){
+		int num=4;
+		System.out.println(num);
+		System.out.println(num2);
+	}
+}
+
+class ExtendsDemo3{
+	public static void main(String[] args){
+		Son s=new Son();
+		s.show();
+	}
+}
+```
+
+
+
+#### 成员方法
+
+1. 子类中方法的声明和父类中方法的声明（函数名、返回值类型、参数列表）不一样
+
+```java
+class Father{
+	void show(){
+		System.out.println("父类show方法");
+	}
+}
+class Son{
+	void method(){
+		System.out.println("子类method方法");
+	}
+}
+
+class ExtendsDemo4{
+	public static void main(String[] args){
+		Son s=new Son();
+		s.method();
+		s.show();
+	/*
+	结果：
+	子类method方法
+	父类show方法
+	*/
+	}
+}
+```
+
+2. 子类中方法的声明和父类中方法的声明一样
+
+用子类调用成员方法时，JVM会先在子类中查找方法，如果有就调用，否则就去父类中查找，如果有就调用，否则就会报错。
+
+```java
+class Father{
+	void show(){
+		System.out.println("父类show方法");
+	}
+}
+class Son{
+	void method(){
+		System.out.println("子类method方法");
+	}
+	void show(){
+		System.out.println("子类show方法");
+	}
+}
+
+class ExtendsDemo4{
+	public static void main(String[] args){
+		Son s=new Son();
+		s.method();
+		s.show();
+	/*
+	结果：
+	子类method方法
+	子类show方法
+	*/
+	}
+}
+```
+
+#### 
+
+#### 构造方法
+
+1. 子类中所有的构造方法都会默认访问父类中的空参数构造方法。
+
+为什么呢？
+
+因为子类会继承父类中的数据，可能还会使用父类的数据。所以，子类初始化之前，一定要先完成父类数据的初始化。
+
+也因此，每一个子类构造方法的第一条语句默认都是：super()。
+
+2. 那么如果父类中没有空参的构造函数呢？
+
+   怎么会没有空参的构造函数呢？不是默认存在的吗？
+
+   如果你在父类中只定义了一个有参数的构造函数，那么编译器就不会再添加默认的空参构造函数，那么父类中就只有一个有参数的构造函数了。
+
+   比如：
+
+   ```java
+   class Father{
+       Father(String name){
+           System.out.println("Father的有参构造函数");
+       }
+   }
+   class Son{
+       Son(){
+           System.out.println("Son的无参构造函数");
+       }
+       Son(String name){
+           System.out.println("Son的有参构造函数");
+       }
+   }
+   ```
+
+   在上述情况下，父类中就没有了无参构造函数。而子类构造函数中默认自带的super()是调用父类的无参构造函数的，所以编译时就会报错。
+
+   那么怎么解决呢？
+
+   1. 在父类中增加一个无参构造函数；
+   2. 在子类构造函数中用super关键字含参数显示调用父类中的有参构造函数；
+
+   ```java
+   class Father{
+       Father(String name){
+           System.out.println("Father的有参构造函数");
+       }
+   }
+   class Son{
+       Son(){
+           super("随便给参数");
+           System.out.println("Son的无参构造函数");
+       }
+       Son(String name){
+           super("随便给参数");
+           System.out.println("Son的有参构造函数");
+       }
+   }
+   ```
+
+   3. 在子类中用this关键字去调用本类中其他的能够成功访问父类构造函数的构造方法，相当于一种间接调用的方法。
+
+   注意，用这种方法时，用this关键字访问的构造方法一定要能够访问父类的构造方法，否则父类中的数据无法完成初始化，代码也就无法通过编译。
+
+   ```java
+   class Father{
+       Father(String name){
+           System.out.println("Father的有参构造函数");
+       }
+   }
+   class Son{
+       Son(){
+           super("随便给参数");
+           System.out.println("Son的无参构造函数");
+       }
+       Son(String name){
+           this();
+           System.out.println("Son的有参构造函数");
+       }
+   }
+   ```
+
+   注意：this()或super()一定要放在作用域的第一条语句位置，因为如果放在其他语句之后，编译器会人为子类构造函数没有super()语句，没有调用父类的构造函数，会自动加上super(),那么就会导致父类数据的多次初始化，这样时无法通过编译的。
+
+#### 方法重写
+
+##### 概述
+
+子类中出现了和父类中一模一样的方法声明，也被称为方法覆盖，方法复写。
+
+##### 应用
+
+当子类需要父类的功能，而功能主体子类有自己特有内容时，可以重写父类中的方法，这样，即沿袭了父类的功能，又定义了子类特有的内容
+
+```java
+//方法重写
+
+class Phone{
+	void call(String name){
+		System.out.println("呼叫"+name);
+	}
+}
+
+class NewPhone extends Phone{
+	void call(String name){
+		super.call(name);
+		System.out.println("通话记录：你给"+name+"打了电话");
+	}
+}
+
+class ExtendsDemo5{
+	public static void main(String[] args){
+		NewPhone np=new NewPhone();
+		np.call("LiMing");
+	}
+}
+```
+
+##### 注意事项
+
+1. 父类中的私有方法不能被重写。因为私有方法只能在本类中访问。
+2. 子类重写父类方法时，子类中方法的访问权限不能低于父类中的对应方法。最好子类和父类保持一致。
+3. 对于父类中的静态方法，子类中也必须用静态方法重写，否则会报错。父类中的非静态方法，在子类中用静态方法重写会报错。（其实这算不上方法重写，但看起来形式一样，具体内容见将在多态中讲解）。
+
+##### 两道面试题
+
+1：方法重写和方法重载的区别?方法重载能改变返回值类型吗?
+
+方法重写：
+	在子类中，出现和父类中一模一样的方法声明的现象。
+	
+方法重载：
+	同一个类中，出现的方法名相同，参数列表不同的现象。
+
+
+方法重载能改变返回值类型，因为它和返回值类型无关。
+
+
+Override：方法重写
+Overload：方法重载
+
+2：this关键字和super关键字分别代表什么?以及他们各自的使用场景和作用。
+
+this:代表当前类的对象引用
+super:代表父类存储空间的标识。(可以理解为父类的引用，通过这个东西可以访问父类的成员)
+
+场景：
+	成员变量：
+		this.成员变量：访问当前类的成员变量
+		super.成员变量：访问父类中的成员变量
+	构造方法：
+		this(...)：本类的构造方法
+		super(...)：父类的构造方法
+	成员方法：
+		this.成员方法：访问当前类的成员方法
+		super.成员方法：访问父类的成员方法
+
+### 案例
+
+#### 1. 老师、学生
+
+```java
+/*
+应用继承写一个demo
+就用Teacher类和Student类来继承Person类
+
+Person类的构成
+成员变量：name、age
+构造函数：空参、带参
+成员函数：getXxx、setXxx
+
+*/
+class Person{
+	private String name;
+	private int age;
+	Person(){
+		
+	}
+	Person(String name,int age){
+		this.name=name;
+		this.age=age;
+	}
+	
+	void setName(String name){
+		this.name=name;
+	}
+	String getName(){
+		return name;
+	}
+	
+	void setAge(int age){
+		this.age=age;
+	}
+	int getAge(){
+		return age;
+	}
+}
+
+class Student extends Person{
+	Student(){
+		
+	}
+	Student(String name,int age){
+		super(name,age);
+		/* 
+		this.name=name;
+		this.age=age;
+		这样写会的话，该构造方法会去调用父类的无参构造方法，
+		成员变量name和age的值会被初始化为默认值null和0。
+		所以我们用super关键字显式调用父类的带参构造函数。
+		*/
+	}
+}
+
+class Teacher extends Person{
+	Teacher(){
+		
+	}
+	Teacher(String name,int age){
+		super(name,age);
+	}
+}
+
+
+class ExtendsTest{
+	public static void main(String[] args){
+		//学生类
+		//测试方法一
+		Student s=new Student();
+		s.setName("LiMing");		
+		s.setAge(12);		
+		System.out.println("学生："+s.getName()+":"+s.getAge());
+		//测试方法二
+		Student s1=new Student("LiMing",12);
+		System.out.println("学生："+s1.getName()+":"+s1.getAge());
+		
+		//老师类
+		//测试方法一
+		Teacher t=new Teacher();
+		t.setName("Jenny");
+		t.setAge(18);
+		System.out.println("老师："+t.getName()+":"+t.getAge());
+		//测试方法二
+		Teacher t1=new Teacher("Jenny",18);
+		System.out.println("老师："+t1.getName()+":"+t1.getAge());
+		
+	}
+}
+```
+
+#### 2. 猫、狗
+
+```java
+/*
+抽象分析：
+1. 我们往往是先观察具体的事物，观察他们的属性和行为；
+2. 将事物抽象为类，将属性和行为抽象为成员变量和成员方法（可能还有静态变量和方法），
+	其实在这里该事物的类就已经可以定义出来了，不过我们要使用继承，所以要分别定义父类和子类；
+3. 从变量和方法中寻找共性，用共性定义父类。
+4. 共性以外即为特性，子类继承父类，再加上特性就可以定义出继承中的子类了。
+5. 具体代码实现中还要定义出各类的构造函数。
+
+案例分析：
+1. 观察猫和狗的属性和行为
+猫
+属性：名字、年龄、品种
+行为：吃饭、玩
+
+狗
+属性：名字、年龄、品种
+行为：吃饭、看家
+
+2. 抽象为类
+
+Cat
+field:name,age,breed
+function:eat();play();setXxx();getXxx
+
+Dog
+field:name,age,breed
+function:eat();guard();setXxx();getXxx
+
+3. 定义父类
+
+Animal
+field:name,age,breed
+constructor:param,non-param
+function:eat();setXxx();getXxx
+
+4.定义子类（继承+特性）
+
+Cat extends Animal
+field:nothing
+constructor:param,non-param
+function:play()
+
+Dog extends Animal
+field:nothing
+constructor:param,non-param
+function:guard()
+
+*/
+
+class Animal{
+	private String name;
+	private int age;
+	private String breed;
+	Animal(){
+		
+	}
+	Animal(String name,int age,String breed){
+		this.name=name;
+		this.age=age;
+		this.breed=breed;
+	}
+	void eat(){
+		System.out.println(getName()+"：我吃我吃我吃吃吃！");
+	}
+	void setName(String name){
+		this.name=name;
+	}
+	String getName(){
+		return name;
+	}
+	void setAge(int age){
+		this.age=age;
+	}
+	int getAge(){
+		return age;
+	}
+	void setBreed(String breed){
+		this.breed=breed;
+	}
+	String getBreed(){
+		return breed;
+	}
+}
+
+class Cat extends Animal{
+	/* 
+	 错误: 无法将类 Object中的构造器 Object应用到给定类型;
+                super(name,age,breed);
+                ^
+	需要: 没有参数
+	找到: String,int,String
+	原因: 实际参数列表和形式参数列表长度不同
+	
+	不要忘记写extends */
+	Cat(){
+		
+	}
+	Cat(String name,int age,String breed){
+		super(name,age,breed);
+	}
+	
+	void play(){
+		System.out.println(this.getName()+"：我玩我玩我玩玩玩！");
+		/* System.out.println(super.getName()+"：我玩我玩我玩玩玩！");
+		这里用this和super都一样，它们指向的都是同一块内存空间，同一个对象。
+		
+		void play(Cat c){
+		System.out.println(c.getName()+"：我玩我玩我玩玩玩！");
+	} 
+		所以没有必要再像上面那样写，把当前对象传递进来。
+		*/
+		
+	}
+	/* 
+	直接调用getName()即可。getName()其实是省略写法，这里其实是super.getName()。
+	所以当对象调用到play()时，执行输出语句，调用super.getName()，去父类中寻找
+	*/
+}
+class Dog extends Animal{//不要忘记写extends
+	Dog(){
+		
+	}
+	Dog(String name,int age,String breed){
+		super(name,age,breed);
+	}
+	void guard(){
+		System.out.println(getName()+"：我守我守我守守守！");
+	}
+}
+
+class ExtendsTest2{
+	public static void main(String[] args){
+		//Cat
+		//方法一
+		Cat c0=new Cat();
+		c0.setName("Tom");
+		c0.setAge(3);
+		c0.setBreed("American Shorthair");
+		c0.eat();
+		c0.play();
+		/*System.out.println(name+":"+age+":"+breed);
+		这几个成员变量在Animal类中都是私有的，要访问需要通过调用setXxx()和getXxx()方法。
+		*/
+		System.out.println(c0.getName()+":"+c0.getAge()+":"+c0.getBreed());
+		//方法二
+		Cat c1=new Cat("DD",3,"British Shorthair");
+		c1.play();
+		System.out.println(c1.getName()+":"+c1.getAge()+":"+c1.getBreed());
+		
+		//Dog
+		//方法一
+		Dog d0=new Dog();
+		d0.setName("Bruce");
+		d0.setAge(2);
+		d0.setBreed("Cokey");
+		d0.guard();
+		System.out.println(d0.getName()+":"+d0.getAge()+":"+d0.getBreed());
+		//方法二
+		Dog d1=new Dog("PP",1,"Border collie");
+		d1.guard();
+		System.out.println(d1.getName()+":"+d1.getAge()+":"+d1.getBreed());
+	}
+}
+```
+
+
+
+### final关键字
+
+#### 背景
+
+在继承中，父类中的方法可以被子类重写，那如果我们不想让父类中的方法被重写的话，该如何保护它呢？
+
+同样，如果我们不想让一个类被其他类继承，我们该如何控制？
+
+我们不想让一个变量被重新赋值，该如何控制？
+
+Java为我们提供了final关键字。
+
+#### 概述
+
+final关键字是最终的意思，可以修饰类、方法、变量。
+
+- 用final修饰类：该类成为最终类，不能被其他类继承。
+
+- 用final修饰方法：该方法不能被重写。
+
+- 用final修饰变量：该变量就成为了常量，只能被赋值一次。
+
+```java
+//final 修饰类
+final class Father{
+	int a=1;
+}
+
+class Son extends Father{
+	
+}
+/* 错误: 无法从最终Father进行继承
+class Son extends Father{  */
+
+
+//用final修饰方法
+class Mother{
+	String a="String";
+	final void show(){
+		System.out.println(a);
+	}
+}
+
+class Daughter extends Mother{
+	void show(){
+			System.out.println("lalalalalala");
+	}
+	/* 错误: Daughter中的show()无法覆盖Mother中的show()
+        void show(){
+             ^
+  被覆盖的方法为final */
+}
+
+class FinalDemo{
+	public static void main(String[] args){
+		final int x=1;
+		x=10;
+		/* 错误: 无法为最终变量x分配值
+                x=10; */
+	}
+}
+```
+
+
+
+#### 两个问题
+
+##### final修饰局部变量
+
+```java
+class Father{
+	int age=50;
+}
+
+class FinalTest{
+	public static void main(String[] args){
+		//基本类型的变量：不可以被重新赋值
+		
+		final int x=1;
+		
+		//x=10;
+		/* 
+		错误: 无法为最终变量x分配值
+                x=10;
+		*/
+		
+		//引用类型的变量：变量所指向的实例包含的成员变量可以被重新赋值，但该引用变量的首地址值不能被重新赋予。
+		final Father f=new Father();
+		System.out.println(f.age);
+		f.age=500;
+		System.out.println(f.age);
+		//成员变量age可以被重新赋值
+		
+		f=new Father();
+		/* 错误: 无法为最终变量f分配值
+                f=new Father(); 
+		
+		此语句想要让该引用变量指向另一个实例，即重新赋予它另一个首地址值，这是不可以的
+				*/
+		
+	}
+}
+```
+
+##### 对被final修饰的变量进行初始化的时机
+
+```java
+class Father{
+	
+	final int age=50;//可以在声明变量时直接进行初始化
+	
+	final int height;
+	{
+		height=185;//可以在构造代码块中进行初始化
+	}
+	
+	final int weight;
+	Father(){
+		weight=80;//可以在构造函数中进行初始化
+	}
+	
+	final String birthday="123";
+	{
+		birthday="19680419";
+	}
+	Father(){
+		birthday="19680420";
+	}
+	/* 错误: 可能已分配变量birthday
+                birthday="19680420"; 
+				
+	但不能在构造代码块和构造函数中都对变量进行初始化
+	*/
+}
+
+/* 
+	何时对被final修饰的变量进行初始化？
+	
+	非静态：
+	在构造函数结束前对其进行初始化即可。
+	因为无论如何，即使你不给成员变量赋值，构造函数也会对成员变量进行默认初始化，
+	给它们赋默认值，那么一旦构造函数运行结束，初始化完成，	由于被final修饰的变量只能被赋值一次，
+	你就无法再给被final修饰的变量赋值了，所以我们要在构造函数定义完之前，给被final修饰的成员变量赋值。
+	
+	静态：
+	因为静态变量随着类的加载就已经被加载进内存了，那么当时就已经完成了初始化，无法再被初始化，
+	所以被final修饰的静态变量最好在声明时直接进行初始化。
+	
+
+*/
+
+class FinalTest2{
+	public static void main(String[] args){
+		
+	}
+}
+```
+
+
+
+## 多态
+
+### 概念
+
+在编程语言和类型论中，多态（英语：polymorphism）指为不同数据类型的实体提供统一的接口。多态类型（英语：polymorphic type）可以将自身所支持的操作套用到其它类型的值上（通过继承构建多态）。
+
+计算机程序运行时，相同的消息可能会送给多个不同的类别之对象，而系统可依据对象所属类别，引发对应类别的方法，而有不同的行为。简单来说，所谓多态意指相同的消息给予不同的对象会引发不同的动作。
+
+多态也可定义为“一种将不同的特殊行为和单个泛化记号相关联的能力”。
+
+多态可分为变量多态与函数多态。变量多态是指：基类型的变量（对于C++是引用或指针）可以被赋值基类型对象，也可以被赋值派生类型的对象。函数多态是指，给相同的函数调用界面（函数名与实参表）传送一个对象变量，可以有不同的行为，这视该对象变量所指向的对象类型而定。因此，变量多态是函数多态的基础。
+
+### 存在条件
+
+1. 有继承关系
+2. 有方法重写
+   - 其实没有方法重写也可以，但没有意义。因为如果没有方法重写，同一个接口使用同一父类的不同子类的实例就会引发相同的动作。
+3. 父类引用指向子类对象`Father f=new Son()`
+
+### 多态方式下访问成员时的特点
+
+1. 成员变量
+
+使用多态方式访问成员变量时，首先检查父类中有没有该成员变量，如果没有，则编译错误，如果有，则访问父类中的该成员变量。
+即，编译看父类，访问看父类。
+
+2. 成员方法
+
+使用多态方式访问成员方法时，首先检查父类中有没有该成员方法，如果没有，则编译错误，如果有，再去调用子类中的同名方法，
+如果子类中有该同名方法，则编译通过，调用子类中的该同名方法（因为方法重写覆盖了父类中的同名方法），如果没有，则编译报错。
+即，编译看父类，运行看子类。
+
+3. 构造方法
+
+创建子类对象的时候，JVM会访问父类的构造方法，初始化父类的数据。
+
+4. 静态方法
+
+静态方法不具备多态性。因为静态方法只与类相关联，无论引用变量实际指向的是什么类型的对象，程序运行的都是声明该引用变量时所声明的类型。
+
+```java
+class Father{
+	int num=1;
+	void show(){
+		System.out.println("show(Father)");
+	}	
+	static void method(){
+		System.out.println("static method(Father)");
+	}
+	/*如果将上面的代码注释掉，编译时会报错：
+	PolyDemo.java:24: 错误: 找不到符号
+                System.out.println(f.num);//result:1
+                                    ^
+	符号:   变量 num
+	位置: 类型为Father的变量 f
+	PolyDemo.java:25: 错误: 找不到符号
+                f.show();//result:show(Son)
+                 ^
+	符号:   方法 show()
+	位置: 类型为Father的变量 f
+	PolyDemo.java:26: 错误: 找不到符号
+                f.method();//result:static method(Father)
+                 ^
+	符号:   方法 method()
+	位置: 类型为Father的变量 f
+	
+	由此可知，使用多态方式访问成员变量、成员方法和静态方法时，都会先去父类中寻找对应的成员变量、成员方法和静态方法。
+	如果找不到，则无法通过编译。
+	
+	*/
+}
+
+class Son extends Father{
+	int num=10;
+	void show(){
+		System.out.println("show(Son)");
+	}
+	static void method(){
+		System.out.println("static method(Son)");
+	}
+}
+
+class PolyDemo{
+	public static void main(String[] args){
+		Father f=new Son();
+		System.out.println(f.num);//result:1
+		f.show();//result:show(Son)
+		f.method();//result:static method(Father)
+	}
+}
+```
+
+### 多态的优点
+
+1. 提高了代码的可维护性（见继承）。
+2. 提高了代码的扩展性。
+
+```java
+//多态带来的可扩展性
+//动物案例
+
+class Animal{
+	void eat(){
+		System.out.println("eat");
+	}
+	void sleep(){
+		System.out.println("sleep");
+	}
+}
+
+class Cat extends Animal{
+	//继承+方法重写
+	void eat(){
+		System.out.println("猫吃鱼");
+	}
+	void sleep(){
+		System.out.println("猫蜷着睡");
+	}
+}
+/*
+我们每定义一种动物，就需要创建类、继承、方法重写。
+*/
+
+class PolyDemo2{
+	public static void main(String[] args){
+		Cat c=new Cat();
+		c.eat();
+		c.sleep();
+		/*
+		那么如果我们要这只猫或许多只猫重复进行吃饭、睡觉的活动，就要重复调用Cat类中的成员函数，比较麻烦。
+		所以我们考虑用函数将调用eat()和sleep()的功能封装起来，但把这个函数定义在哪个类中都不太合适，所以我们创建一个工具类来实现该功能。
+		*/
+		Cat c1=new Cat();
+		Tool.catFunc(c1);
+		/*
+		Cat类的问题解决了。但是如果我们想让更多的Animal类的子类都能使用Tool类呢？
+		我们可以每次创建了新的子类都在Tool类中添加上对应的方法，但这样既麻烦，也会由于频繁修改，导致工具类出错的可能性大增。
+		那该怎么办？
+		我们考虑可以事先把所有动物的对应方法都在Tool类中定义好，即穷举法。但是这好像不太现实，而且工作量太大了。
+		所以我们考虑运用多态来解决这个问题。即，我们不再逐个定义不同动物的对应函数，而是只定义操作动物类的函数，将不同种类的动物都用动物类
+		的方式来操作即可。代码见AnimalTool类。
+		*/
+		Cat c2=new Cat();
+		AnimalTool.animalFunc(c2);
+		
+	}
+}
+
+/* class Tool{
+	public static void catFunc(Cat c){
+		c.eat();
+		c.sleep();
+	} */
+	
+class AnimalTool{
+	public static void animalFunc(Animal a){
+			a.eat();
+			a.sleep();
+	}
+}
+/*
+该工具类是如何构成和体现多态的？
+
+继承：Cat类是Animal类的子类
+方法重写：Cat类重写了Animal类中的eat()和sleep()
+父类引用指向子类对象：AnimalTool的参数列表是Animal类的引用类型变量，但实际传入的确实Animal类的子类的引用类型变量。
+*/
+
+```
+
+### 多态的弊端
+
+只能访问父类中定义了的方法在子类中的重写方法，无法调用子类的特有方法。
+
+如何解决？
+
+- 重新创建一个子类对象，通过它来调用子类的特有方法。
+
+这种方法多创建了一个实例，浪费了内存空间。
+
+- 运用向下转型，将父类的引用类型变量赋值给子类的引用类型变量。
+
+### 向上转型和向下转型
+
+```java
+class Father{
+	void show(){
+		System.out.println("show(Father)");
+	}
+}
+
+class Son extends Father{
+	void show(){
+		System.out.println("show(Son)");
+	}
+	void method(){
+		System.out.println("only method(Son)");
+	}
+}
+
+class PolyDemo3{
+	public static void main(String[] args){
+		//向上转型：相当于儿子穿父亲的衣服，化妆为父亲
+		Father f=new Son();
+		f.show();
+		//f.method();
+		/*
+		PolyDemo3.java:20: 错误: 找不到符号
+                f.method();
+                 ^
+		符号:   方法 method()
+		位置: 类型为Father的变量 f
+		1 个错误
+		*/
+		
+		//向下转型
+		Son s=(Son)f;
+		s.method();
+		/* 
+		因为f实际上是Son类的实例的引用变量，所以可以向下转型。
+		*/
+	}
+	
+}
+```
+
+### 多态内存图解
+
+向上转换：
+
+![image-20200319150836203](Java学习笔记.assets/image-20200319150836203.png)
+
+向下转换：
+
+![image-20200319151643973](Java学习笔记.assets/image-20200319151643973.png)
+
+```java
+//ClassCastException：类指向错误
+
+class Animal{
+	void eat(){
+		
+	}
+}
+
+class Cat extends Animal{
+	void eat(){
+		
+	}
+	void play(){
+		
+	}
+}
+
+class Dog extends Animal{
+	void eat(){
+		
+	}
+	void guard(){
+		
+	}
+}
+
+
+class PolyTest{
+	public static void main(String[] args){
+		//内存中的实例为狗
+		Animal a=new Dog();//向上转换
+		a.eat();
+		Dog d=(Dog)a;//可以向下转换
+		
+		//内存中的实例为猫
+		a=new Cat();
+		Dog dd=(Dog)a;//无法转换
+		/* 编译不报错，运行报错如下：
+		Exception in thread "main" java.lang.ClassCastException: Cat cannot be cast to Dog（猫无法被指向狗）
+        at PolyTest.main(PolyTest.java:35)
+		*/
+	}
+}
+```
+
+### 练习
+
+```java
+/*
+	看程序写结果:先判断有没有问题，如果没有，写出结果
+	
+	多态的成员访问特点：
+		方法：编译看左边，运行看右边。
+		
+	继承的时候：
+		子类中有和父类中一样的方法，叫重写。
+		子类中没有父亲中出现过的方法，方法就被继承过来了。
+*/
+class A {
+	public void show() {
+		show2();
+	}
+	public void show2() {
+		System.out.println("我");
+	}
+}
+class B extends A {
+	/*
+	public void show() {
+		show2();
+	}
+	*/
+
+	public void show2() {
+		System.out.println("爱");
+	}
+}
+class C extends B {
+	public void show() {
+		super.show();
+	}
+	public void show2() {
+		System.out.println("你");
+	}
+}
+public class DuoTaiTest4 {
+	public static void main(String[] args) {
+		A a = new B();
+		a.show();
+		
+		B b = new C();
+		b.show();
+	}
+}
+```
+
+
+
+## 抽象类
+
+### 概述
+
+从我们前面多次见到的动物案例中可以看出，单纯的动物类其实是没什么实际意义的，它并没有对应的实体，也就没有创建对象的意义，它只是一种人为抽象出的概念。属于动物类的猫、狗等才有实际意义，有创建对应对象的意义。我们可以称动物类这种认为抽象出来的概念类型为抽象类。
+
+既然创建动物类这种抽象类没有意义，那么我们就想阻止使用者这么做。我们可以通过让抽象类中所有方法都出错来达到目的，但这样就需要先运行程序才能得到错误信息，浪费时间和资源。所以我们希望在编译时就能得到错误信息。
+
+为此，Java提供了一种叫做“抽象方法（函数）”的机制。这种函数是不完整的，只有声明而没有方法体，如下：
+
+```java
+abstract void functionName();//这叫没方法体
+abstract void functionName(){};//这叫有方法体，只是方法体为空
+```
+Java用抽象方法来表明、限定抽象类，并且提供了`abstract`关键字。
+
+### 特点
+
+1. 没有实际意义，无法创建实例。
+	- 但抽象类也有构造函数，用于创建子类对象时初始化父类的数据。
+2. 抽象方法和抽象类都由`abstract`关键字修饰。
+3. 包含抽象方法的类必然是抽象类。抽象类也可以不包含抽象方法。
+	- 当一个类包含任何抽象方法都没意义，但我们也无需创建该类的对象时，就可以将之定义为抽象类。
+4. 如果要继承抽象类，创建它的子类，可以分为两种情况。
+	- 在子类中重写该抽象类中的抽象方法，为其提供方法定义（因为有了具体定义就不是抽象方法，所以无需也不能用abstract关键字修饰该成员方法），这样可以得到一个可以实例化的子类。
+	- 不在子类中重写抽象方法，这样得到的子类也是一个抽象类（且必须用abstract修饰，否则编译时报错）。
+5. 我们无法直接实例化抽象类，但是可以通过多态的方式来实例化它的子类，从而实现间接实例化抽象类。
+
+#### 示例
+
+```java
+abstract class Animal{
+	abstract void eat();
+	abstract void sleep();
+	void breath(){
+		System.out.println("breath");
+	}	
+}
+
+abstract class Cat extends Animal{
+	
+}
+
+class Dog extends Animal{
+	void eat(){
+		System.out.println("Dogs eat meat.");
+	}
+	void sleep(){
+		System.out.println("Dogs sleep on the ground.");
+	}
+}
+
+class AbstractDemo{
+	public static void main(String[] args){
+		//Animal a=new Cat(); Cat是抽象的; 无法实例化
+		Animal a=new Dog();
+		a.eat();
+		a.sleep();
+		a.breath();
+	}
+}
+```
 
